@@ -71,26 +71,85 @@ export function Section({
   title,
   open,
   onToggle,
-  badge,
+  changed = 0,
+  onReset,
   children,
 }: {
   id: string;
   title: string;
   open: boolean;
   onToggle: (id: string, open: boolean) => void;
-  badge?: ReactNode;
+  /** How many sliders in this panel differ from their defaults. */
+  changed?: number;
+  onReset?: () => void;
   children: ReactNode;
 }) {
   return (
     <details className="section" open={open} onToggle={(e) => onToggle(id, (e.target as HTMLDetailsElement).open)}>
       <summary>
         <span>{title}</span>
-        {badge}
+        {changed > 0 && (
+          <span className="section__meta">
+            <span className="count" title={`${changed} setting${changed === 1 ? '' : 's'} changed`}>
+              {changed}
+            </span>
+            {onReset && (
+              <button
+                type="button"
+                className="icon-btn"
+                title={`Reset ${title}`}
+                aria-label={`Reset ${title}`}
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  onReset();
+                }}
+              >
+                <IconReset />
+              </button>
+            )}
+          </span>
+        )}
       </summary>
       <div className="section__body">{children}</div>
     </details>
   );
 }
+
+export function SubHead({ children }: { children: ReactNode }) {
+  return <h4 className="sub">{children}</h4>;
+}
+
+const svg = { width: 16, height: 16, viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', strokeWidth: 2, strokeLinecap: 'round', strokeLinejoin: 'round', 'aria-hidden': true } as const;
+
+export const IconReset = () => (
+  <svg {...svg}>
+    <path d="M3 12a9 9 0 1 0 3-6.7" />
+    <path d="M3 4v5h5" />
+  </svg>
+);
+
+export const IconImage = () => (
+  <svg {...svg}>
+    <rect x="3" y="4" width="18" height="16" rx="3" />
+    <circle cx="9" cy="10" r="2" />
+    <path d="M21 16l-5-5-9 9" />
+  </svg>
+);
+
+export const IconDownload = () => (
+  <svg {...svg}>
+    <path d="M12 4v11" />
+    <path d="M7 10l5 5 5-5" />
+    <path d="M5 20h14" />
+  </svg>
+);
+
+export const IconChevron = () => (
+  <svg {...svg} width={12} height={12} strokeWidth={2.5}>
+    <path d="M6 9l6 6 6-6" />
+  </svg>
+);
 
 /** Approximate display hues (HSL degrees) for each Color Mixer band. */
 const BAND_HUE: Record<MixerColor, number> = {

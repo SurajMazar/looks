@@ -10,13 +10,18 @@ import {
   type Settings,
   type Theme,
   isHeif,
+  CONTROLS,
+  CONTROL_BY_PATH,
+  getValue,
 } from '@looks/core';
-import { GradingPanel, MixerPanel, Section, Slider, type SetValue } from './components';
+import { GradingPanel, IconChevron, IconDownload, IconImage, IconReset, MixerPanel, Section, Slider, SubHead, type SetValue } from './components';
 import { Renderer, type Loaded } from './renderer';
 import { download, loadPrefs, loadSavedThemes, storePrefs, storeSavedThemes } from './storage';
 
 const REPO = 'https://github.com/SurajMazar/looks';
 const DEFAULT_OPEN = ['look', 'light', 'color', 'mixer', 'grading'];
+const FORMAT_LABEL = { 'image/jpeg': 'JPG', 'image/png': 'PNG', 'image/webp': 'WebP' } as const;
+const GROUP_PATHS = CONTROLS.reduce<Record<string, string[]>>((acc, c) => ((acc[c.group] ??= []).push(c.path), acc), {});
 
 interface Photo {
   name: string;
@@ -172,6 +177,26 @@ export default function App() {
   }, [openFile]);
 
   const change: SetValue = useCallback((path, value) => setSettings((s) => setValue(s, path, value)), []);
+  /** Changed-slider count and a reset for one panel. */
+  const sectionState = (group: string) => {
+    const paths = GROUP_PATHS[group] ?? [];
+    let changed = paths.filter((p) => {
+      const v = getValue(settings, p);
+      return v !== undefined && v !== CONTROL_BY_PATH.get(p)!.default;
+    }).length;
+    if (group === 'Curve' && settings.curve) changed += Object.keys(settings.curve).length;
+    const onReset = () =>
+      setSettings((s) => {
+        let next = paths.reduce((acc, p) => setValue(acc, p, undefined), s);
+        if (group === 'Curve' && next.curve) {
+          next = { ...next };
+          delete next.curve;
+        }
+        return next;
+      });
+    return { changed, onReset };
+  };
+
   const toggle = useCallback((id: string, isOpen: boolean) => {
     setOpen((o) => (isOpen ? [...new Set([...o, id])] : o.filter((x) => x !== id)));
   }, []);
@@ -271,30 +296,36 @@ export default function App() {
     >
       <header className="bar">
         <a className="brand" href={REPO} target="_blank" rel="noreferrer" title="looks on GitHub">
-          <img src="./favicon.svg" alt="" width={26} height={26} />
+          <img src="./favicon.svg" alt="" width={28} height={28} />
           <span>looks</span>
         </a>
-        <span className="bar__tag">Lightroom-style looks, applied in your browser</span>
+        <span className="bar__tag">Lightroom-style looks for your photos</span>
         <div className="bar__actions">
-          <button className="btn" onClick={() => fileRef.current?.click()}>
-            Open photo
+          <button className="btn btn--quiet" onClick={() => fileRef.current?.click()} title="Open a photo" aria-label="Open photo">
+            <IconImage />
+            <span className="hide-sm">Open photo</span>
           </button>
-          <div className="btn-group">
-            <select aria-label="Export format" value={format} onChange={(e) => setFormat(e.target.value as typeof format)} disabled={!photo}>
-              <option value="image/jpeg">JPEG</option>
-              <option value="image/png">PNG</option>
-              <option value="image/webp">WebP</option>
-            </select>
-            <button className="btn btn--primary" onClick={exportPhoto} disabled={!photo || exporting}>
-              {exporting ? 'Exporting…' : 'Download'}
+          <div className={`split${!photo || exporting ? ' is-disabled' : ''}`}>
+            <button className="split__main" onClick={exportPhoto} disabled={!photo || exporting} title="Download the edited photo at full size">
+              {exporting ? <span className="spinner spinner--dark" aria-hidden="true" /> : <IconDownload />}
+              {exporting ? 'Saving…' : 'Download'}
             </button>
+            <label className="split__fmt" title="File format">
+              <span>{FORMAT_LABEL[format]}</span>
+              <IconChevron />
+              <select aria-label="File format" value={format} onChange={(e) => setFormat(e.target.value as typeof format)} disabled={!photo || exporting}>
+                <option value="image/jpeg">JPG</option>
+                <option value="image/png">PNG</option>
+                <option value="image/webp">WebP</option>
+              </select>
+            </label>
           </div>
         </div>
         <input ref={fileRef} type="file" accept="image/*,.heic,.heif,.hif" hidden onChange={(e) => (openFile(e.target.files?.[0]), (e.target.value = ''))} />
         <input ref={themeFileRef} type="file" accept=".json,.xmp,application/json" hidden onChange={(e) => (importTheme(e.target.files?.[0]), (e.target.value = ''))} />
       </header>
 
-      <main className="stage" ref={stageRef}>
+      <main className={`stage${photo ? '' : ' is-empty'}`} ref={stageRef}>
         {opening && (
           <div className="opening" role="status">
             <span className="spinner" aria-hidden="true" />
@@ -303,14 +334,17 @@ export default function App() {
         )}
         {!photo && !opening && (
           <button className="drop" onClick={() => fileRef.current?.click()}>
-            <svg viewBox="0 0 48 48" width="44" height="44" aria-hidden="true">
-              <rect x="5" y="9" width="38" height="30" rx="5" fill="none" stroke="currentColor" strokeWidth="2.5" />
-              <circle cx="17" cy="19" r="4" fill="currentColor" />
-              <path d="M8 36l11-11 8 8 5-5 9 9" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinejoin="round" />
-            </svg>
+            <span className="drop__icon">
+              <svg viewBox="0 0 48 48" width="40" height="40" aria-hidden="true">
+                <rect x="5" y="9" width="38" height="30" rx="5" fill="none" stroke="currentColor" strokeWidth="2.5" />
+                <circle cx="17" cy="19" r="4" fill="currentColor" />
+                <path d="M8 36l11-11 8 8 5-5 9 9" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinejoin="round" />
+              </svg>
+            </span>
             <strong>Drop a photo here</strong>
-            <span>JPEG, PNG, WebP or HEIC · click to choose, or paste</span>
-            <small>Everything runs on your device. Photos are never uploaded.</small>
+            <span>or click to choose one · you can also paste</span>
+            <span className="drop__formats">JPEG · PNG · WebP · AVIF · HEIC</span>
+            <small>Runs on your device. Photos are never uploaded.</small>
           </button>
         )}
         <div
@@ -335,37 +369,44 @@ export default function App() {
         </div>
         {photo && (
           <div className="stage__info">
-            <span>{photo.name}</span>
+            <span className="stage__name">{photo.name}</span>
             <span>
-              {photo.width}×{photo.height}
+              {photo.width} × {photo.height}
             </span>
-            <span>{rendering ? 'rendering…' : renderMs !== null ? `preview ${renderMs} ms` : ''}</span>
-            <span className="stage__hint">drag to compare · \ toggles</span>
+            <span className={rendering ? 'is-busy' : ''}>{rendering ? 'Rendering…' : renderMs !== null ? `${renderMs} ms` : ''}</span>
+            <span className="stage__hint">Drag to compare · press \ to flip</span>
           </div>
         )}
       </main>
 
       <aside className="panel">
         <Section id="look" title="Look" open={open.includes('look')} onToggle={toggle}>
-          <div className="looks">
+          <div className="looks" role="list">
             {allThemes.map((t) => (
-              <button key={t.name} className={`chip${t.name === base.name ? ' is-active' : ''}`} onClick={() => pickTheme(t)} title={t.description}>
+              <button key={t.name} role="listitem" className={`chip${t.name === base.name ? ' is-active' : ''}`} onClick={() => pickTheme(t)} title={t.description}>
                 {t.name}
-                {saved.some((s) => s.name === t.name) && <i aria-label="saved by you" />}
+                {saved.some((s) => s.name === t.name) && <i title="Saved in this browser" />}
               </button>
             ))}
             <button className="chip chip--ghost" onClick={() => themeFileRef.current?.click()} title="Import a .json theme or a Lightroom .xmp preset">
               + Import
             </button>
           </div>
-          <div className="look-head">
-            <div>
+
+          <div className="look-card">
+            <div className="look-card__title">
               <strong>{base.name}</strong>
               {dirty && <span className="badge">edited</span>}
-              {base.description && <p>{base.description}</p>}
-              {base.notes && <p className="muted">{base.notes}</p>}
             </div>
+            {base.description && <p className="look-card__desc">{base.description}</p>}
+            {base.notes && (
+              <details className="about">
+                <summary>About this look</summary>
+                <p>{base.notes}</p>
+              </details>
+            )}
           </div>
+
           <div className="slider strength" style={{ '--pos': `${strength}%`, '--from': '0%', '--to': `${strength}%` } as CSSProperties}>
             <div className="slider__row">
               <label htmlFor="strength">Strength</label>
@@ -390,8 +431,8 @@ export default function App() {
                 Description <span className="muted">(optional)</span>
                 <input value={saving.description} onChange={(e) => setSaving({ ...saving, description: e.target.value })} placeholder="What does it look like?" />
               </label>
-              <div className="row">
-                <button type="submit" className="btn btn--primary">
+              <div className="actions">
+                <button type="submit" className="btn btn--primary btn--grow">
                   Save theme
                 </button>
                 <button type="button" className="btn" onClick={() => setSaving(null)}>
@@ -400,78 +441,101 @@ export default function App() {
               </div>
             </form>
           ) : (
-            <div className="row wrap">
-              <button className="btn btn--primary" onClick={() =>
-                  setSaving(
-                    isSaved || !dirty
-                      ? { name: base.name, description: base.description ?? '' }
-                      : { name: `${base.name}-mine`, description: `Based on ${base.name}.` },
-                  )
-                }>
-                {isSaved && dirty ? 'Save changes' : 'Save as theme'}
-              </button>
-              <button className="btn" disabled={!dirty} onClick={() => setSettings(base.settings)}>
-                Reset
-              </button>
-              <button className="btn" onClick={exportJson} title="Download as JSON (works with the looks CLI)">
-                .json
-              </button>
-              <button className="btn" onClick={exportXmp} title="Download as a Lightroom preset">
-                .xmp
-              </button>
-              {isSaved && (
-                <button className="btn btn--danger" onClick={removeTheme}>
-                  Delete
+            <>
+              <div className="actions">
+                <button
+                  className="btn btn--primary btn--grow"
+                  onClick={() =>
+                    setSaving(
+                      isSaved || !dirty
+                        ? { name: base.name, description: base.description ?? '' }
+                        : { name: `${base.name}-mine`, description: `Based on ${base.name}.` },
+                    )
+                  }
+                >
+                  {isSaved && dirty ? 'Save changes' : 'Save as theme'}
                 </button>
-              )}
-            </div>
+                <button className="btn" disabled={!dirty} onClick={() => setSettings(base.settings)} title={`Undo your edits to ${base.name}`}>
+                  <IconReset />
+                  Reset
+                </button>
+              </div>
+              <div className="export-row">
+                <span>Export</span>
+                <button className="pill-btn" onClick={exportJson} title="Theme file for the looks CLI">
+                  JSON
+                </button>
+                <button className="pill-btn" onClick={exportXmp} title="Preset for Lightroom">
+                  Lightroom XMP
+                </button>
+                {isSaved && (
+                  <button className="text-btn text-btn--danger" onClick={removeTheme}>
+                    Delete
+                  </button>
+                )}
+              </div>
+            </>
           )}
         </Section>
 
-        <Section id="light" title="Light" open={open.includes('light')} onToggle={toggle}>
+        <Section id="light" title="Light" open={open.includes('light')} onToggle={toggle} {...sectionState('Light')}>
           {['exposure', 'contrast', 'highlights', 'shadows', 'whites', 'blacks'].map((p) => (
             <Slider key={p} path={p} settings={settings} onChange={change} />
           ))}
         </Section>
 
-        <Section id="color" title="Color" open={open.includes('color')} onToggle={toggle}>
+        <Section id="color" title="Color" open={open.includes('color')} onToggle={toggle} {...sectionState('Color')}>
+          <SubHead>White balance</SubHead>
           <Slider path="temp" settings={settings} onChange={change} track="linear-gradient(90deg, #3d7bd8, #9aa0a6, #e3b83f)" />
           <Slider path="tint" settings={settings} onChange={change} track="linear-gradient(90deg, #43a047, #9aa0a6, #c84fc8)" />
+          <SubHead>Presence</SubHead>
           <Slider path="vibrance" settings={settings} onChange={change} />
           <Slider path="saturation" settings={settings} onChange={change} />
         </Section>
 
-        <Section id="mixer" title="Color Mixer" open={open.includes('mixer')} onToggle={toggle}>
+        <Section id="mixer" title="Color Mixer" open={open.includes('mixer')} onToggle={toggle} {...sectionState('Color Mixer')}>
           <MixerPanel settings={settings} onChange={change} />
         </Section>
 
-        <Section id="grading" title="Color Grading" open={open.includes('grading')} onToggle={toggle}>
+        <Section id="grading" title="Color Grading" open={open.includes('grading')} onToggle={toggle} {...sectionState('Color Grading')}>
           <GradingPanel settings={settings} onChange={change} />
         </Section>
 
-        <Section id="effects" title="Effects" open={open.includes('effects')} onToggle={toggle}>
-          {['texture', 'clarity', 'dehaze', 'vignette.amount', 'vignette.midpoint', 'vignette.feather', 'vignette.roundness', 'grain.amount', 'grain.size', 'grain.roughness'].map((p) => (
+        <Section id="effects" title="Effects" open={open.includes('effects')} onToggle={toggle} {...sectionState('Effects')}>
+          {['texture', 'clarity', 'dehaze'].map((p) => (
             <Slider key={p} path={p} settings={settings} onChange={change} />
+          ))}
+          <SubHead>Vignette</SubHead>
+          {['vignette.amount', 'vignette.midpoint', 'vignette.feather', 'vignette.roundness', 'vignette.highlights'].map((p) => (
+            <Slider key={p} path={p} settings={settings} onChange={change} label={p === 'vignette.amount' ? 'Amount' : undefined} />
+          ))}
+          <SubHead>Grain</SubHead>
+          {['grain.amount', 'grain.size', 'grain.roughness'].map((p) => (
+            <Slider key={p} path={p} settings={settings} onChange={change} label={p === 'grain.amount' ? 'Amount' : undefined} />
           ))}
         </Section>
 
-        <Section id="curve" title="Tone Curve" open={open.includes('curve')} onToggle={toggle}>
+        <Section id="curve" title="Tone Curve" open={open.includes('curve')} onToggle={toggle} {...sectionState('Curve')}>
           {['parametric.highlights', 'parametric.lights', 'parametric.darks', 'parametric.shadows'].map((p) => (
             <Slider key={p} path={p} settings={settings} onChange={change} />
           ))}
-          {settings.curve && <p className="muted small">This theme also has a point curve ({Object.keys(settings.curve).join(', ')}), applied as-is.</p>}
+          {settings.curve && <p className="note">This theme also has a point curve ({Object.keys(settings.curve).join(', ')}), applied as-is.</p>}
         </Section>
 
-        <Section id="detail" title="Detail" open={open.includes('detail')} onToggle={toggle}>
-          {['sharpening.amount', 'sharpening.radius', 'sharpening.detail', 'sharpening.masking', 'noiseReduction.luminance', 'noiseReduction.color'].map((p) => (
-            <Slider key={p} path={p} settings={settings} onChange={change} />
+        <Section id="detail" title="Detail" open={open.includes('detail')} onToggle={toggle} {...sectionState('Detail')}>
+          <SubHead>Sharpening</SubHead>
+          {['sharpening.amount', 'sharpening.radius', 'sharpening.detail', 'sharpening.masking'].map((p) => (
+            <Slider key={p} path={p} settings={settings} onChange={change} label={p === 'sharpening.amount' ? 'Amount' : undefined} />
           ))}
-          <p className="muted small">Sharpening and noise reduction work at full size, so they show in the download more than in the preview.</p>
+          <SubHead>Noise reduction</SubHead>
+          <Slider path="noiseReduction.luminance" settings={settings} onChange={change} label="Luminance" />
+          <Slider path="noiseReduction.color" settings={settings} onChange={change} label="Color" />
+          <p className="note">These work at full size, so they show more in the download than in the preview.</p>
         </Section>
 
         <Section id="cli" title="Use it in the terminal" open={open.includes('cli')} onToggle={toggle}>
-          <p className="small">
-            Download the <b>.json</b>, then with the{' '}
+          <p className="note">
+            Export the theme as <b>JSON</b>, then with the{' '}
             <a href={REPO} target="_blank" rel="noreferrer">
               looks CLI
             </a>
