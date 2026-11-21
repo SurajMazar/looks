@@ -1,0 +1,29 @@
+{
+  "name": "looks-cli",
+  "version": "0.1.0",
+  "description": "Apply saved Lightroom-style looks to photos from the command line: looks gta6 photo.jpg",
+  "license": "MIT",
+  "type": "module",
+  "bin": {
+    "looks": "dist/looks.js"
+  },
+  "files": [
+    "dist"
+  ],
+  "engines": {
+    "node": ">=24.22.3"
+  },
+  "scripts": {
+    "build": "node build.mjs",
+    "typecheck": "tsc -p tsconfig.json",
+    "test": "node build.mjs && vitest run"
+  },
+  "dependencies": {
+    "sharp": "0.35.5"
+  },
+  "devDependencies": {
+    "@looks/core": "workspace:*",
+    "esbuild": "0.28.2",
+    "@types/node": "24.19.2"
+  }
+}

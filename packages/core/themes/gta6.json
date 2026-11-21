@@ -1,0 +1,32 @@
+{
+  "name": "gta6",
+  "description": "GTA VI / Vice City sunset look: teal shadows, candy-pink skies, warm glowing highlights.",
+  "notes": "Sliders copied one-for-one from a Lightroom tutorial. There, exposure and white balance are set per photo; both of its example photos came out about 0.9 EV darker, so that is the default here. Nudge Exposure, Temp and Tint to suit each photo.",
+  "settings": {
+    "exposure": -0.9,
+    "contrast": 27,
+    "highlights": -39,
+    "shadows": 13,
+    "whites": 14,
+    "blacks": -23,
+    "vibrance": 32,
+    "saturation": 1,
+    "mixer": {
+      "red": { "hue": -8, "sat": 16, "lum": 4 },
+      "orange": { "hue": -6, "sat": 12, "lum": 14 },
+      "yellow": { "hue": -26, "sat": -21, "lum": 9 },
+      "green": { "hue": 19, "sat": -31, "lum": -8 },
+      "aqua": { "hue": -9, "sat": 24, "lum": 12 },
+      "blue": { "hue": -14, "sat": 7, "lum": -11 },
+      "purple": { "hue": 9, "sat": 14, "lum": -5 },
+      "magenta": { "hue": 8, "sat": 25, "lum": 8 }
+    },
+    "grading": {
+      "shadows": { "hue": 196, "sat": 22, "lum": -6 },
+      "midtones": { "hue": 326, "sat": 12, "lum": 2 },
+      "highlights": { "hue": 33, "sat": 23, "lum": 6 }
+    },
+    "sharpening": { "amount": 33, "radius": 1, "detail": 23, "masking": 53 },
+    "noiseReduction": { "luminance": 8, "color": 25 }
+  }
+}

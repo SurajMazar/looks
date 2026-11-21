@@ -1,0 +1,16 @@
+{
+  "name": "@looks/core",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Lightroom-style image engine and theme format shared by the looks CLI and web app.",
+  "license": "MIT",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./themes/*": "./themes/*"
+  },
+  "scripts": {
+    "typecheck": "tsc -p tsconfig.json",
+    "test": "vitest run"
+  }
+}

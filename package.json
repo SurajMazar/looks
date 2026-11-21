@@ -1,0 +1,25 @@
+{
+  "name": "looks-monorepo",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Save Lightroom-style photo looks as named themes and apply them from the command line or the browser.",
+  "license": "MIT",
+  "type": "module",
+  "packageManager": "pnpm@12.18.0",
+  "engines": {
+    "node": ">=24.22.3 <25"
+  },
+  "scripts": {
+    "build": "pnpm -r build",
+    "typecheck": "pnpm -r typecheck",
+    "test": "pnpm -r test",
+    "dev": "pnpm --filter @looks/web dev",
+    "cli": "node packages/cli/dist/looks.js",
+    "install:cli": "sh scripts/install-cli.sh"
+  },
+  "devDependencies": {
+    "typescript": "6.0.3",
+    "vitest": "5.1.1",
+    "@types/node": "24.19.2"
+  }
+}
