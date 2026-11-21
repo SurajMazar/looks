@@ -15,7 +15,8 @@
     "test": "pnpm -r test",
     "dev": "pnpm --filter @looks/web dev",
     "cli": "node packages/cli/dist/looks.js",
-    "install:cli": "sh scripts/install-cli.sh"
+    "install:cli": "sh scripts/install-cli.sh",
+    "samples": "node scripts/build-samples.mjs"
   },
   "devDependencies": {
     "typescript": "6.0.3",

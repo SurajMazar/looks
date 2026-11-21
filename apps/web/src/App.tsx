@@ -31,6 +31,15 @@ interface Photo {
   previewH: number;
 }
 
+interface Sample {
+  theme: string;
+  alt: string;
+  photo: string;
+  before: string;
+  after: string;
+  credit: string;
+}
+
 const same = (a: Settings, b: Settings) => JSON.stringify(a) === JSON.stringify(b);
 const stemOf = (name: string) => name.replace(/\.[^.]+$/, '') || 'photo';
 
@@ -54,6 +63,7 @@ export default function App() {
   const [renderMs, setRenderMs] = useState<number | null>(null);
   const [exporting, setExporting] = useState(false);
   const [opening, setOpening] = useState<string | null>(null);
+  const [samples, setSamples] = useState<Sample[]>([]);
   const [saving, setSaving] = useState<null | { name: string; description: string }>(null);
   const [dragging, setDragging] = useState(false);
   const [format, setFormat] = useState<'image/jpeg' | 'image/png' | 'image/webp'>('image/jpeg');
@@ -207,6 +217,36 @@ export default function App() {
     setSettings(t.settings);
   };
 
+  // Sample photos shown before anyone opens their own (built by scripts/build-samples.mjs).
+  useEffect(() => {
+    fetch('./samples/samples.json')
+      .then((r) => (r.ok ? r.json() : []))
+      .then((list: Sample[]) => setSamples(list.filter((s) => BUILTIN_THEMES.some((t) => t.name === s.theme))))
+      .catch(() => setSamples([]));
+  }, []);
+
+  const trySample = async (sample: Sample) => {
+    const theme = allThemes.find((t) => t.name === sample.theme);
+    if (!theme) return;
+    if (dirty && theme.name !== base.name && !window.confirm(`Discard your changes to “${base.name}”?`)) return;
+    setBase(theme);
+    setSettings(theme.settings);
+    try {
+      const blob = await fetch(sample.photo).then((r) => {
+        if (!r.ok) throw new Error(String(r.status));
+        return r.blob();
+      });
+      await openFile(new File([blob], `${sample.theme}-sample.jpg`, { type: blob.type || 'image/jpeg' }));
+    } catch {
+      notify("Couldn't load that sample photo.", 'error');
+    }
+  };
+
+  const closePhoto = () => {
+    setPhoto(null);
+    setRenderMs(null);
+  };
+
   const persist = (next: Theme[]) => {
     setSaved(next);
     if (!storeSavedThemes(next)) notify("Couldn't save in this browser (storage is blocked). Export the theme as a file instead.", 'error');
@@ -333,19 +373,55 @@ export default function App() {
           </div>
         )}
         {!photo && !opening && (
-          <button className="drop" onClick={() => fileRef.current?.click()}>
-            <span className="drop__icon">
-              <svg viewBox="0 0 48 48" width="40" height="40" aria-hidden="true">
-                <rect x="5" y="9" width="38" height="30" rx="5" fill="none" stroke="currentColor" strokeWidth="2.5" />
-                <circle cx="17" cy="19" r="4" fill="currentColor" />
-                <path d="M8 36l11-11 8 8 5-5 9 9" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinejoin="round" />
-              </svg>
-            </span>
-            <strong>Drop a photo here</strong>
-            <span>or click to choose one · you can also paste</span>
-            <span className="drop__formats">JPEG · PNG · WebP · AVIF · HEIC</span>
-            <small>Runs on your device. Photos are never uploaded.</small>
-          </button>
+          <section className="gallery" aria-label="Sample photos">
+            <header className="gallery__head">
+              <h1>Pick a look</h1>
+              <p>Try one on a sample photo, or open your own. Everything runs on your device.</p>
+            </header>
+            <div className="gallery__grid">
+              <button className="card card--drop" onClick={() => fileRef.current?.click()}>
+                <span className="card__media card__media--drop">
+                  <span className="drop__icon">
+                    <svg viewBox="0 0 48 48" width="36" height="36" aria-hidden="true">
+                      <rect x="5" y="9" width="38" height="30" rx="5" fill="none" stroke="currentColor" strokeWidth="2.5" />
+                      <circle cx="17" cy="19" r="4" fill="currentColor" />
+                      <path d="M8 36l11-11 8 8 5-5 9 9" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinejoin="round" />
+                    </svg>
+                  </span>
+                  <strong>Use your own photo</strong>
+                  <span>Drop, paste or click</span>
+                  <span className="drop__formats">JPEG · PNG · WebP · HEIC</span>
+                </span>
+              </button>
+              {samples.map((s) => {
+                const theme = allThemes.find((t) => t.name === s.theme);
+                return (
+                  <button key={s.theme} className={`card${s.theme === base.name ? ' is-active' : ''}`} onClick={() => trySample(s)} title={`Try ${s.theme} on this photo`}>
+                    <span className="card__media">
+                      <img src={s.after} alt={`${s.alt}, with the ${s.theme} look`} loading="lazy" />
+                      <img className="card__before" src={s.before} alt="" loading="lazy" />
+                      <span className="card__split" aria-hidden="true" />
+                      <span className="card__tag card__tag--l">Before</span>
+                      <span className="card__tag card__tag--r">After</span>
+                    </span>
+                    <span className="card__body">
+                      <strong>{s.theme}</strong>
+                      <span>{theme?.description?.split(':').pop()?.trim() || theme?.description}</span>
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+            {samples.length > 0 && (
+              <p className="gallery__credit">
+                Sample photos from{' '}
+                <a href={`${REPO}/blob/main/apps/web/public/samples/CREDITS.md`} target="_blank" rel="noreferrer">
+                  Unsplash
+                </a>
+                .
+              </p>
+            )}
+          </section>
         )}
         <div
           className="frame"
@@ -375,6 +451,9 @@ export default function App() {
             </span>
             <span className={rendering ? 'is-busy' : ''}>{rendering ? 'Rendering…' : renderMs !== null ? `${renderMs} ms` : ''}</span>
             <span className="stage__hint">Drag to compare · press \ to flip</span>
+            <button className="text-btn stage__close" onClick={closePhoto} title="Close this photo and show the samples">
+              Close photo
+            </button>
           </div>
         )}
       </main>

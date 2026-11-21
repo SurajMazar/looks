@@ -1,0 +1,58 @@
+[
+  {
+    "theme": "gta6",
+    "alt": "Ocean Drive, Miami, at dusk",
+    "photo": "samples/gta6.jpg",
+    "before": "samples/gta6-before.webp",
+    "after": "samples/gta6-after.webp",
+    "credit": "https://unsplash.com/photos/vehicles-parked-beside-curb-during-daytime-e0y06kkszX0"
+  },
+  {
+    "theme": "cyberpunk",
+    "alt": "City skyline at sunset",
+    "photo": "samples/cyberpunk.jpg",
+    "before": "samples/cyberpunk-before.webp",
+    "after": "samples/cyberpunk-after.webp",
+    "credit": "https://unsplash.com/photos/city-buildings-during-sunset-Vtl6cOhO87Y"
+  },
+  {
+    "theme": "solo-leveling",
+    "alt": "Rainy city street at night",
+    "photo": "samples/solo-leveling.jpg",
+    "before": "samples/solo-leveling-before.webp",
+    "after": "samples/solo-leveling-after.webp",
+    "credit": "https://unsplash.com/photos/people-walking-on-street-during-nighttime-WpUOPwkswpw"
+  },
+  {
+    "theme": "dandandan",
+    "alt": "Basketball hoop at dusk",
+    "photo": "samples/dandandan.jpg",
+    "before": "samples/dandandan-before.webp",
+    "after": "samples/dandandan-after.webp",
+    "credit": "https://unsplash.com/photos/basketball-hoop-on-a-court-at-sunset-JBsK9rJEccA"
+  },
+  {
+    "theme": "mushoku-tensei",
+    "alt": "Grassy path through a green field",
+    "photo": "samples/mushoku-tensei.jpg",
+    "before": "samples/mushoku-tensei-before.webp",
+    "after": "samples/mushoku-tensei-after.webp",
+    "credit": "https://unsplash.com/photos/grassy-path-winding-uphill-through-a-vibrant-green-field-74BSKWPzTu4"
+  },
+  {
+    "theme": "tokyo-ghoul",
+    "alt": "Train platform at night",
+    "photo": "samples/tokyo-ghoul.jpg",
+    "before": "samples/tokyo-ghoul-before.webp",
+    "after": "samples/tokyo-ghoul-after.webp",
+    "credit": "https://unsplash.com/photos/two-people-stand-on-a-train-platform-at-night-aY_i87chJJg"
+  },
+  {
+    "theme": "bleach-1000-year-blood-war",
+    "alt": "River and street light at sunset",
+    "photo": "samples/bleach-1000-year-blood-war.jpg",
+    "before": "samples/bleach-1000-year-blood-war-before.webp",
+    "after": "samples/bleach-1000-year-blood-war-after.webp",
+    "credit": "https://unsplash.com/photos/a-street-light-sitting-next-to-a-body-of-water-X34q3blcAl8"
+  }
+]

@@ -20,6 +20,18 @@ Built-in themes, each transcribed slider-for-slider from a Lightroom tutorial:
 - **`tokyo-ghoul`**: Tokyo Ghoul. Dark teal-green nights, crushed shadows, glowing red lights, gritty grain.
 - **`bleach-1000-year-blood-war`**: Bleach: Thousand-Year Blood War. Blood-red skies, crimson shadows, dark contrast.
 
+| Look | Before | After |
+| --- | --- | --- |
+| `gta6` | <img src="apps/web/public/samples/gta6-before.webp" width="170" alt="Ocean Drive, Miami, at dusk, before"> | <img src="apps/web/public/samples/gta6-after.webp" width="170" alt="Ocean Drive, Miami, at dusk, with gta6"> |
+| `cyberpunk` | <img src="apps/web/public/samples/cyberpunk-before.webp" width="170" alt="City skyline at sunset, before"> | <img src="apps/web/public/samples/cyberpunk-after.webp" width="170" alt="City skyline at sunset, with cyberpunk"> |
+| `solo-leveling` | <img src="apps/web/public/samples/solo-leveling-before.webp" width="170" alt="Rainy city street at night, before"> | <img src="apps/web/public/samples/solo-leveling-after.webp" width="170" alt="Rainy city street at night, with solo-leveling"> |
+| `dandandan` | <img src="apps/web/public/samples/dandandan-before.webp" width="170" alt="Basketball hoop at dusk, before"> | <img src="apps/web/public/samples/dandandan-after.webp" width="170" alt="Basketball hoop at dusk, with dandandan"> |
+| `mushoku-tensei` | <img src="apps/web/public/samples/mushoku-tensei-before.webp" width="170" alt="Grassy path through a green field, before"> | <img src="apps/web/public/samples/mushoku-tensei-after.webp" width="170" alt="Grassy path through a green field, with mushoku-tensei"> |
+| `tokyo-ghoul` | <img src="apps/web/public/samples/tokyo-ghoul-before.webp" width="170" alt="Train platform at night, before"> | <img src="apps/web/public/samples/tokyo-ghoul-after.webp" width="170" alt="Train platform at night, with tokyo-ghoul"> |
+| `bleach-1000-year-blood-war` | <img src="apps/web/public/samples/bleach-1000-year-blood-war-before.webp" width="170" alt="River and street light at sunset, before"> | <img src="apps/web/public/samples/bleach-1000-year-blood-war-after.webp" width="170" alt="River and street light at sunset, with bleach-1000-year-blood-war"> |
+
+Sample photos: [Unsplash](apps/web/public/samples/CREDITS.md), free under the Unsplash License. Regenerate the after images with `pnpm samples` after changing a theme.
+
 - **CLI**: batch-apply themes to JPEG, PNG, WebP, AVIF, TIFF and HEIC/HEIF photos (iPhone photos included).
 - **Web app**: open a photo (HEIC too, in any browser), pick or tweak a look, download the result. Nothing is uploaded; it all runs in your browser.
 - **One engine**: the CLI and the web app share the same TypeScript image engine, so a theme looks the same in both.
