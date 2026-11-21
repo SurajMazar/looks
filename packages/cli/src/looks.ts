@@ -205,16 +205,17 @@ async function cmdApply(themeRef: string | undefined, images: string[], flags: A
 function cmdList(): void {
   const user = listUserThemes();
   const userNames = new Set(user.map((t) => t.name));
+  const width = Math.max(16, ...[...BUILTIN_THEMES, ...user].map((t) => t.name.length)) + 2;
   console.log(bold('Built-in'));
   for (const t of BUILTIN_THEMES) {
     const shadowed = userNames.has(t.name) ? dim(' (replaced by your saved version)') : '';
-    console.log(`  ${cyan(t.name.padEnd(16))} ${t.description ?? ''}${shadowed}`);
+    console.log(`  ${cyan(t.name.padEnd(width))}${t.description ?? ''}${shadowed}`);
   }
   console.log(bold('\nSaved'));
   if (!user.length) console.log(dim(`  none yet — try: looks save mylook --from gta6 --set contrast=40`));
   for (const t of user) {
-    if (t.error) console.log(`  ${red(t.name.padEnd(16))} ${red(`broken: ${t.error}`)}`);
-    else console.log(`  ${cyan(t.name.padEnd(16))} ${t.theme?.description ?? ''}`);
+    if (t.error) console.log(`  ${red(t.name.padEnd(width))}${red(`broken: ${t.error}`)}`);
+    else console.log(`  ${cyan(t.name.padEnd(width))}${t.theme?.description ?? ''}`);
   }
   console.log(dim(`\nSaved themes live in ${themesDir()}`));
 }
