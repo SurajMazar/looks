@@ -6,7 +6,7 @@ Save Lightroom-style photo looks as **named themes** and apply them in one comma
 looks gta6 photo.jpg
 ```
 
-…or in the browser, with live sliders and a before/after split.
+…or in the browser, with live sliders and a before/after split: **[surajmazar.github.io/looks](https://surajmazar.github.io/looks/)**
 
 Themes use the same sliders and units as Lightroom (Light, Color, Color Mixer, Color Grading, Detail, Effects, Tone Curve), so you can copy settings straight from Lightroom or a tutorial. You can also import Lightroom `.xmp` presets and export any theme back to `.xmp`.
 
@@ -94,13 +94,15 @@ Every value uses Lightroom's range (most sliders −100…100; exposure in stops
 
 ## Web app
 
+Live at **[surajmazar.github.io/looks](https://surajmazar.github.io/looks/)**, or run it locally:
+
 ```bash
 pnpm dev        # http://localhost:5181
 ```
 
 Drop or paste a photo, pick a look, drag the divider to compare (or press `\`). Every Lightroom panel is there, including the Color Mixer dots and Color Grading wheels. Save themes in the browser, import `.json`/`.xmp`, export `.json` (for the CLI) or `.xmp` (for Lightroom), and download the edited photo at full resolution as JPEG, PNG or WebP.
 
-`pnpm --filter @looks/web build` produces a static site in `apps/web/dist` that works on any static host. The CI workflow can publish it to GitHub Pages: set the repository variable `DEPLOY_PAGES` to `true` and choose **GitHub Actions** as the Pages source.
+`pnpm --filter @looks/web build` produces a static site in `apps/web/dist` that works on any static host. The CI workflow publishes it to GitHub Pages on every push to `main` while the repository variable `DEPLOY_PAGES` is `true`.
 
 ## How it works
 
