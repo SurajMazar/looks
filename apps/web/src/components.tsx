@@ -137,6 +137,15 @@ export const IconImage = () => (
   </svg>
 );
 
+export const IconGrid = () => (
+  <svg {...svg}>
+    <rect x="4" y="4" width="7" height="7" rx="1.5" />
+    <rect x="13" y="4" width="7" height="7" rx="1.5" />
+    <rect x="4" y="13" width="7" height="7" rx="1.5" />
+    <rect x="13" y="13" width="7" height="7" rx="1.5" />
+  </svg>
+);
+
 export const IconDownload = () => (
   <svg {...svg}>
     <path d="M12 4v11" />

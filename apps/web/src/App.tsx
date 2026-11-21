@@ -14,7 +14,7 @@ import {
   CONTROL_BY_PATH,
   getValue,
 } from '@looks/core';
-import { GradingPanel, IconChevron, IconDownload, IconImage, IconReset, MixerPanel, Section, Slider, SubHead, type SetValue } from './components';
+import { GradingPanel, IconChevron, IconDownload, IconGrid, IconImage, IconReset, MixerPanel, Section, Slider, SubHead, type SetValue } from './components';
 import { Renderer, type Loaded } from './renderer';
 import { download, loadPrefs, loadSavedThemes, storePrefs, storeSavedThemes } from './storage';
 
@@ -29,6 +29,8 @@ interface Photo {
   height: number;
   previewW: number;
   previewH: number;
+  /** Set when this is one of the built-in sample photos (the look it belongs to). */
+  sample?: string;
 }
 
 interface Sample {
@@ -131,7 +133,7 @@ export default function App() {
   }, [photo]);
 
   const openFile = useCallback(
-    async (file: File | undefined | null) => {
+    async (file: File | undefined | null, sample?: string) => {
       if (!file) return;
       const heifName = /\.(heic|heif|hif)$/i.test(file.name) || /image\/hei[cf]/.test(file.type);
       if (!file.type.startsWith('image/') && !heifName && !/\.(avif|webp|jpe?g|png|gif|bmp|tiff?)$/i.test(file.name)) {
@@ -156,7 +158,7 @@ export default function App() {
         c.height = loaded.previewH;
         c.getContext('2d')!.drawImage(loaded.before, 0, 0);
         loaded.before.close();
-        setPhoto({ name: file.name, width: loaded.width, height: loaded.height, previewW: loaded.previewW, previewH: loaded.previewH });
+        setPhoto({ name: file.name, width: loaded.width, height: loaded.height, previewW: loaded.previewW, previewH: loaded.previewH, sample });
         setSplit(50);
       } catch (e) {
         const detail = (e as Error)?.message;
@@ -175,8 +177,9 @@ export default function App() {
       if (item) openFile(item.getAsFile());
     };
     const onKey = (e: KeyboardEvent) => {
-      if ((e.target as HTMLElement)?.closest('input, textarea, select')) return;
+      if (e.target instanceof Element && e.target.closest('input, textarea, select')) return;
       if (e.key === '\\') setSplit((s) => (s === 100 ? 0 : 100));
+      if (e.key === 'Escape') setPhoto(null);
     };
     window.addEventListener('paste', onPaste);
     window.addEventListener('keydown', onKey);
@@ -211,12 +214,6 @@ export default function App() {
     setOpen((o) => (isOpen ? [...new Set([...o, id])] : o.filter((x) => x !== id)));
   }, []);
 
-  const pickTheme = (t: Theme) => {
-    if (dirty && !window.confirm(`Discard your changes to “${base.name}”?`)) return;
-    setBase(t);
-    setSettings(t.settings);
-  };
-
   // Sample photos shown before anyone opens their own (built by scripts/build-samples.mjs).
   useEffect(() => {
     fetch('./samples/samples.json')
@@ -225,21 +222,35 @@ export default function App() {
       .catch(() => setSamples([]));
   }, []);
 
-  const trySample = async (sample: Sample) => {
-    const theme = allThemes.find((t) => t.name === sample.theme);
-    if (!theme) return;
-    if (dirty && theme.name !== base.name && !window.confirm(`Discard your changes to “${base.name}”?`)) return;
-    setBase(theme);
-    setSettings(theme.settings);
+  const loadSamplePhoto = async (sample: Sample) => {
     try {
       const blob = await fetch(sample.photo).then((r) => {
         if (!r.ok) throw new Error(String(r.status));
         return r.blob();
       });
-      await openFile(new File([blob], `${sample.theme}-sample.jpg`, { type: blob.type || 'image/jpeg' }));
+      await openFile(new File([blob], `${sample.theme}-sample.jpg`, { type: blob.type || 'image/jpeg' }), sample.theme);
     } catch {
       notify("Couldn't load that sample photo.", 'error');
     }
+  };
+
+  /**
+   * Switches look. Until someone opens their own photo, the preview follows the
+   * look: each look shows its own best-fitting sample photo.
+   */
+  const pickTheme = (t: Theme) => {
+    if (t.name !== base.name) {
+      if (dirty && !window.confirm(`Discard your changes to “${base.name}”?`)) return;
+      setBase(t);
+      setSettings(t.settings);
+    }
+    const sample = samples.find((s) => s.theme === t.name);
+    if (sample && (!photo || photo.sample) && photo?.sample !== t.name) void loadSamplePhoto(sample);
+  };
+
+  const trySample = (sample: Sample) => {
+    const theme = allThemes.find((t) => t.name === sample.theme);
+    if (theme) pickTheme(theme);
   };
 
   const closePhoto = () => {
@@ -341,6 +352,12 @@ export default function App() {
         </a>
         <span className="bar__tag">Lightroom-style looks for your photos</span>
         <div className="bar__actions">
+          {photo && (
+            <button className="btn btn--quiet" onClick={closePhoto} title="Back to the sample photos (Esc)" aria-label="Back to samples">
+              <IconGrid />
+              <span className="hide-sm">Samples</span>
+            </button>
+          )}
           <button className="btn btn--quiet" onClick={() => fileRef.current?.click()} title="Open a photo" aria-label="Open photo">
             <IconImage />
             <span className="hide-sm">Open photo</span>
@@ -445,14 +462,14 @@ export default function App() {
         </div>
         {photo && (
           <div className="stage__info">
-            <span className="stage__name">{photo.name}</span>
+            <span className="stage__name">{photo.sample ? `Sample photo · ${photo.sample}` : photo.name}</span>
             <span>
               {photo.width} × {photo.height}
             </span>
             <span className={rendering ? 'is-busy' : ''}>{rendering ? 'Rendering…' : renderMs !== null ? `${renderMs} ms` : ''}</span>
             <span className="stage__hint">Drag to compare · press \ to flip</span>
-            <button className="text-btn stage__close" onClick={closePhoto} title="Close this photo and show the samples">
-              Close photo
+            <button className="text-btn stage__close" onClick={closePhoto} title="Back to the sample photos (Esc)">
+              ← Back to samples
             </button>
           </div>
         )}
