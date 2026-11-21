@@ -10,7 +10,10 @@ looks gta6 photo.jpg
 
 Themes use the same sliders and units as Lightroom (Light, Color, Color Mixer, Color Grading, Detail, Effects, Tone Curve), so you can copy settings straight from Lightroom or a tutorial. You can also import Lightroom `.xmp` presets and export any theme back to `.xmp`.
 
-Ships with **`gta6`**: a GTA VI / Vice City sunset look (teal shadows, candy-pink skies, warm highlights), transcribed slider-for-slider from a Lightroom tutorial.
+Built-in themes, each transcribed slider-for-slider from a Lightroom tutorial:
+
+- **`gta6`**: GTA VI / Vice City sunset. Teal shadows, candy-pink skies, warm highlights.
+- **`cyberpunk`**: Cyberpunk: Edgerunners / Night City sunset. Electric blue skies, hot-pink horizons, purple shadows. Works best on dusk shots; on daylight photos add `--exposure -1.5` or so for a night feel.
 
 - **CLI**: batch-apply themes to JPEG, PNG, WebP, AVIF, TIFF and HEIC/HEIF photos (iPhone photos included).
 - **Web app**: open a photo (HEIC too, in any browser), pick or tweak a look, download the result. Nothing is uploaded; it all runs in your browser.
@@ -106,7 +109,12 @@ pnpm dev        # http://localhost:5181
 
 Drop or paste a photo (JPEG, PNG, WebP, AVIF or HEIC), pick a look, drag the divider to compare (or press `\`). Every Lightroom panel is there, including the Color Mixer dots and Color Grading wheels. Save themes in the browser, import `.json`/`.xmp`, export `.json` (for the CLI) or `.xmp` (for Lightroom), and download the edited photo at full resolution as JPEG, PNG or WebP.
 
-`pnpm --filter @looks/web build` produces a static site in `apps/web/dist` that works on any static host. The CI workflow publishes it to GitHub Pages on every push to `main` while the repository variable `DEPLOY_PAGES` is `true`.
+`pnpm --filter @looks/web build` produces a static site in `apps/web/dist` that works on any static host.
+
+### Deploy
+
+- **Vercel**: [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FSurajMazar%2Flooks) or import the repo in Vercel with the default settings. [vercel.json](vercel.json) already sets the install command, build command, output folder (`apps/web/dist`) and caching headers, so there is nothing to configure. It installs only the web app's dependencies, using the pinned pnpm version, on Node 24.
+- **GitHub Pages**: the CI workflow publishes it on every push to `main` while the repository variable `DEPLOY_PAGES` is `true`.
 
 ## How it works
 

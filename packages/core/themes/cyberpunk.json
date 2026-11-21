@@ -1,0 +1,35 @@
+{
+  "name": "cyberpunk",
+  "description": "Cyberpunk: Edgerunners / Night City sunset: electric blue skies, hot-pink horizons, purple shadows.",
+  "notes": "Sliders copied one-for-one from a Lightroom tutorial. It also used a sky mask (Exposure +0.05, Contrast +6, Highlights -28, Shadows +10, Whites +4, Blacks -3) that looks doesn't support yet, and its example photos were taken darker and bluer per photo. Pull Exposure down and Temp cooler for a deeper night look.",
+  "settings": {
+    "exposure": 0.1,
+    "contrast": 20,
+    "highlights": -35,
+    "shadows": 20,
+    "whites": 10,
+    "blacks": -24,
+    "temp": -2,
+    "tint": 20,
+    "vibrance": 25,
+    "saturation": -5,
+    "curve": {
+      "rgb": [[0, 0], [32, 22], [64, 55], [128, 133], [192, 207], [255, 255]]
+    },
+    "mixer": {
+      "red": { "hue": -12, "sat": 8, "lum": 4 },
+      "orange": { "hue": -15, "sat": -12, "lum": 10 },
+      "yellow": { "hue": -35, "sat": -45, "lum": 4 },
+      "green": { "hue": 20, "sat": -65, "lum": -15 },
+      "aqua": { "hue": 22, "sat": 10 },
+      "blue": { "hue": 18, "sat": 20, "lum": -16 },
+      "purple": { "hue": -8, "sat": 20, "lum": 6 },
+      "magenta": { "hue": -5, "sat": 20, "lum": 10 }
+    },
+    "grading": {
+      "shadows": { "hue": 230, "sat": 23, "lum": -4 },
+      "midtones": { "hue": 285, "sat": 9, "lum": 2 },
+      "highlights": { "hue": 345, "sat": 22, "lum": 5 }
+    }
+  }
+}

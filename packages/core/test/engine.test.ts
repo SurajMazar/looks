@@ -175,6 +175,18 @@ describe('themes', () => {
     expect(gta6.settings.grading?.shadows).toEqual({ hue: 196, sat: 22, lum: -6 });
   });
 
+  it('every built-in theme file is valid, with no warnings', async () => {
+    const files = ['gta6', 'cyberpunk'];
+    for (const f of files) {
+      const raw = (await import(`../themes/${f}.json`)).default;
+      expect(parseTheme(raw).warnings, f).toEqual([]);
+    }
+    const cp = findBuiltin('cyberpunk')!;
+    expect(cp.settings.curve?.rgb).toEqual([[0, 0], [32, 22], [64, 55], [128, 133], [192, 207], [255, 255]]);
+    expect(cp.settings.grading?.highlights).toEqual({ hue: 345, sat: 22, lum: 5 });
+    expect(cp.settings.mixer?.green).toEqual({ hue: 20, sat: -65, lum: -15 });
+  });
+
   it('warns about unknown keys and clamps out-of-range values', () => {
     const { theme, warnings } = parseTheme({ name: 'x', settings: { contrast: 500, bogus: 1, mixer: { blue: { hue: 10 } } } });
     expect(theme.settings.contrast).toBe(100);
