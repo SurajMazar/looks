@@ -113,7 +113,7 @@ Drop or paste a photo (JPEG, PNG, WebP, AVIF or HEIC), pick a look, drag the div
 
 ### Deploy
 
-- **Vercel**: [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FSurajMazar%2Flooks) or import the repo in Vercel with the default settings. [vercel.json](vercel.json) already sets the install command, build command, output folder (`apps/web/dist`) and caching headers, so there is nothing to configure. It installs only the web app's dependencies, using the pinned pnpm version, on Node 24.
+- **Vercel**: [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FSurajMazar%2Flooks) or import the repo in Vercel with the default settings. [vercel.json](vercel.json) already sets the install command, build command, output folder and caching headers, so there is nothing to configure. Root Directory can be the repo root or `apps/web` (each has its own `vercel.json`); leave Build and Output overrides off. It installs only the web app's dependencies, using the pinned pnpm version, on Node 24.
 - **GitHub Pages**: the CI workflow publishes it on every push to `main` while the repository variable `DEPLOY_PAGES` is `true`.
 
 ## How it works
