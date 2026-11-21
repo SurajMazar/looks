@@ -12,8 +12,8 @@ Themes use the same sliders and units as Lightroom (Light, Color, Color Mixer, C
 
 Ships with **`gta6`**: a GTA VI / Vice City sunset look (teal shadows, candy-pink skies, warm highlights), transcribed slider-for-slider from a Lightroom tutorial.
 
-- **CLI**: batch-apply themes to JPEG, PNG, WebP, AVIF, TIFF and (on macOS) HEIC photos.
-- **Web app**: open a photo, pick or tweak a look, download the result. Nothing is uploaded; it all runs in your browser.
+- **CLI**: batch-apply themes to JPEG, PNG, WebP, AVIF, TIFF and HEIC/HEIF photos (iPhone photos included).
+- **Web app**: open a photo (HEIC too, in any browser), pick or tweak a look, download the result. Nothing is uploaded; it all runs in your browser.
 - **One engine**: the CLI and the web app share the same TypeScript image engine, so a theme looks the same in both.
 
 ## Install the CLI
@@ -63,6 +63,10 @@ looks export moody moody.xmp
 looks rm moody
 ```
 
+### HEIC / iPhone photos
+
+HEIC and HEIF files work everywhere. On macOS the CLI decodes them with the system's own decoder; on Linux and Windows, and in browsers other than Safari, it uses [libheif](https://github.com/strukturag/libheif) compiled to WebAssembly. iPhone photos are Display P3, so the colour profile stored in the file is converted to sRGB before the look is applied. Edited HEICs are saved as JPEG by default (or pass `-o photo.png` / `.webp` / `.avif`).
+
 Themes are plain JSON files in `~/.config/looks/themes/` (or `$XDG_CONFIG_HOME/looks/themes`, or `$LOOKS_HOME/themes`). You can also pass a file directly: `looks ./warm.json photo.jpg`.
 
 ## Theme format
@@ -100,7 +104,7 @@ Live at **[surajmazar.github.io/looks](https://surajmazar.github.io/looks/)**, o
 pnpm dev        # http://localhost:5181
 ```
 
-Drop or paste a photo, pick a look, drag the divider to compare (or press `\`). Every Lightroom panel is there, including the Color Mixer dots and Color Grading wheels. Save themes in the browser, import `.json`/`.xmp`, export `.json` (for the CLI) or `.xmp` (for Lightroom), and download the edited photo at full resolution as JPEG, PNG or WebP.
+Drop or paste a photo (JPEG, PNG, WebP, AVIF or HEIC), pick a look, drag the divider to compare (or press `\`). Every Lightroom panel is there, including the Color Mixer dots and Color Grading wheels. Save themes in the browser, import `.json`/`.xmp`, export `.json` (for the CLI) or `.xmp` (for Lightroom), and download the edited photo at full resolution as JPEG, PNG or WebP.
 
 `pnpm --filter @looks/web build` produces a static site in `apps/web/dist` that works on any static host. The CI workflow publishes it to GitHub Pages on every push to `main` while the repository variable `DEPLOY_PAGES` is `true`.
 
@@ -126,4 +130,4 @@ pnpm build
 
 ## License
 
-MIT
+MIT. HEIC decoding uses [libheif-js](https://github.com/catdad-experiments/libheif-js) (LGPL-3.0), which is loaded as a separate module (a separate file in the web build) and only when a HEIC file is opened.

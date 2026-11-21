@@ -10,7 +10,7 @@ await build({
   platform: 'node',
   target: 'node24',
   format: 'esm',
-  external: ['sharp'],
+  external: ['sharp', 'libheif-js'],
   banner: { js: '#!/usr/bin/env node' },
   define: { __VERSION__: JSON.stringify(pkg.version) },
   logLevel: 'warning',

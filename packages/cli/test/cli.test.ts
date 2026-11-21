@@ -9,10 +9,20 @@ const BIN = join(__dirname, '..', 'dist', 'looks.js');
 let dir: string;
 let env: NodeJS.ProcessEnv;
 
-const looks = (...args: string[]) => {
-  const res = spawnSync(process.execPath, [BIN, ...args], { env, cwd: dir, encoding: 'utf8' });
+const FIXTURES = join(__dirname, '..', '..', 'core', 'test', 'fixtures');
+
+const looksWith = (extraEnv: NodeJS.ProcessEnv, ...args: string[]) => {
+  const res = spawnSync(process.execPath, [BIN, ...args], { env: { ...env, ...extraEnv }, cwd: dir, encoding: 'utf8' });
   return { code: res.status, out: res.stdout, err: res.stderr };
 };
+const looks = (...args: string[]) => looksWith({}, ...args);
+
+async function meanDiff(a: string, b: string): Promise<number> {
+  const [x, y] = await Promise.all([a, b].map((f) => sharp(f).removeAlpha().raw().toBuffer()));
+  let sum = 0;
+  for (let i = 0; i < x.length; i++) sum += Math.abs(x[i] - y[i]);
+  return sum / x.length;
+}
 
 beforeAll(async () => {
   dir = mkdtempSync(join(tmpdir(), 'looks-test-'));
@@ -85,6 +95,17 @@ describe('looks CLI', () => {
     expect(looks('gta6', 'photo.jpg', '--set', 'contrast=500').err).toMatch(/between -100 and 100/);
     expect(looks('gta6', 'photo.jpg', '-o', 'photo.jpg').err).toMatch(/overwrite the original/);
     expect(looks('gta6', 'missing.jpg').code).toBe(1);
+  });
+
+  it('reads iPhone-style HEIC (Display P3) with correct colours on any OS', async () => {
+    writeFileSync(join(dir, 'none.json'), JSON.stringify({ name: 'none', settings: {} }));
+    const r = looksWith({ LOOKS_HEIF_DECODER: 'libheif' }, './none.json', join(FIXTURES, 'p3.heic'), '-o', 'heic.png');
+    expect(r.code, r.err).toBe(0);
+    // Without colour management this is ~7.5; HEIC compression alone accounts for ~1.
+    expect(await meanDiff(join(dir, 'heic.png'), join(FIXTURES, 'reference.png'))).toBeLessThan(2);
+    const g = looksWith({ LOOKS_HEIF_DECODER: 'libheif' }, 'gta6', join(FIXTURES, 'p3.heic'), '-o', 'heic-gta6.jpg', '--max-size', '64');
+    expect(g.code, g.err).toBe(0);
+    expect((await sharp(join(dir, 'heic-gta6.jpg')).metadata()).width).toBe(64);
   });
 
   it('prints help and version', () => {

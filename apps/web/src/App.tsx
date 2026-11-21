@@ -9,9 +9,10 @@ import {
   toXmp,
   type Settings,
   type Theme,
+  isHeif,
 } from '@looks/core';
 import { GradingPanel, MixerPanel, Section, Slider, type SetValue } from './components';
-import { Renderer } from './renderer';
+import { Renderer, type Loaded } from './renderer';
 import { download, loadPrefs, loadSavedThemes, storePrefs, storeSavedThemes } from './storage';
 
 const REPO = 'https://github.com/SurajMazar/looks';
@@ -47,6 +48,7 @@ export default function App() {
   const [rendering, setRendering] = useState(false);
   const [renderMs, setRenderMs] = useState<number | null>(null);
   const [exporting, setExporting] = useState(false);
+  const [opening, setOpening] = useState<string | null>(null);
   const [saving, setSaving] = useState<null | { name: string; description: string }>(null);
   const [dragging, setDragging] = useState(false);
   const [format, setFormat] = useState<'image/jpeg' | 'image/png' | 'image/webp'>('image/jpeg');
@@ -116,23 +118,36 @@ export default function App() {
   const openFile = useCallback(
     async (file: File | undefined | null) => {
       if (!file) return;
-      if (!file.type.startsWith('image/') && !/\.(heic|heif|avif|webp|jpe?g|png|gif|bmp|tiff?)$/i.test(file.name)) {
+      const heifName = /\.(heic|heif|hif)$/i.test(file.name) || /image\/hei[cf]/.test(file.type);
+      if (!file.type.startsWith('image/') && !heifName && !/\.(avif|webp|jpe?g|png|gif|bmp|tiff?)$/i.test(file.name)) {
         notify(`${file.name} isn't an image.`, 'error');
         return;
       }
+      setOpening(file.name);
       try {
-        const bitmap = await createImageBitmap(file, { imageOrientation: 'from-image' });
-        const { width, height } = bitmap;
-        const { before, width: pw, height: ph } = await renderer.load(bitmap);
+        let loaded: Loaded;
+        try {
+          // Fast path: the browser decodes it (Safari handles HEIC natively).
+          const bitmap = await createImageBitmap(file, { imageOrientation: 'from-image' });
+          loaded = await renderer.load(bitmap);
+        } catch (nativeErr) {
+          // Chrome/Firefox can't decode HEIC: hand the bytes to libheif in the worker.
+          const bytes = await file.arrayBuffer();
+          if (!isHeif(new Uint8Array(bytes, 0, Math.min(bytes.byteLength, 64)))) throw nativeErr;
+          loaded = await renderer.load(bytes);
+        }
         const c = beforeRef.current!;
-        c.width = pw;
-        c.height = ph;
-        c.getContext('2d')!.drawImage(before, 0, 0);
-        before.close();
-        setPhoto({ name: file.name, width, height, previewW: pw, previewH: ph });
+        c.width = loaded.previewW;
+        c.height = loaded.previewH;
+        c.getContext('2d')!.drawImage(loaded.before, 0, 0);
+        loaded.before.close();
+        setPhoto({ name: file.name, width: loaded.width, height: loaded.height, previewW: loaded.previewW, previewH: loaded.previewH });
         setSplit(50);
-      } catch {
-        notify(`This browser can't open ${file.name}. Try a JPEG or PNG (HEIC only opens in Safari).`, 'error');
+      } catch (e) {
+        const detail = (e as Error)?.message;
+        notify(`Couldn't open ${file.name}${detail && !/decode|source image/i.test(detail) ? `: ${detail}` : ''}. Try a JPEG, PNG, WebP or HEIC.`, 'error');
+      } finally {
+        setOpening(null);
       }
     },
     [renderer, notify],
@@ -275,12 +290,18 @@ export default function App() {
             </button>
           </div>
         </div>
-        <input ref={fileRef} type="file" accept="image/*,.heic,.heif" hidden onChange={(e) => (openFile(e.target.files?.[0]), (e.target.value = ''))} />
+        <input ref={fileRef} type="file" accept="image/*,.heic,.heif,.hif" hidden onChange={(e) => (openFile(e.target.files?.[0]), (e.target.value = ''))} />
         <input ref={themeFileRef} type="file" accept=".json,.xmp,application/json" hidden onChange={(e) => (importTheme(e.target.files?.[0]), (e.target.value = ''))} />
       </header>
 
       <main className="stage" ref={stageRef}>
-        {!photo && (
+        {opening && (
+          <div className="opening" role="status">
+            <span className="spinner" aria-hidden="true" />
+            Opening {opening}…
+          </div>
+        )}
+        {!photo && !opening && (
           <button className="drop" onClick={() => fileRef.current?.click()}>
             <svg viewBox="0 0 48 48" width="44" height="44" aria-hidden="true">
               <rect x="5" y="9" width="38" height="30" rx="5" fill="none" stroke="currentColor" strokeWidth="2.5" />
@@ -288,7 +309,7 @@ export default function App() {
               <path d="M8 36l11-11 8 8 5-5 9 9" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinejoin="round" />
             </svg>
             <strong>Drop a photo here</strong>
-            <span>or click to choose one · you can also paste</span>
+            <span>JPEG, PNG, WebP or HEIC · click to choose, or paste</span>
             <small>Everything runs on your device. Photos are never uploaded.</small>
           </button>
         )}

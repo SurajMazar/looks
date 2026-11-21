@@ -19,11 +19,12 @@
     "test": "node build.mjs && vitest run"
   },
   "dependencies": {
+    "libheif-js": "1.23.5",
     "sharp": "0.35.5"
   },
   "devDependencies": {
     "@looks/core": "workspace:*",
-    "esbuild": "0.28.2",
-    "@types/node": "24.19.2"
+    "@types/node": "24.19.2",
+    "esbuild": "0.28.2"
   }
 }

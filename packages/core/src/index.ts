@@ -55,3 +55,5 @@ export function imageToRgba(
   }
   return rgba;
 }
+export { isHeif, heifColourProfile, decodeHeif, type LibHeif, type DecodedHeif } from './heif.js';
+export { parseIccProfile, convertToSrgb, isSrgbLike, nclxProfile, type RgbProfile } from './icc.js';

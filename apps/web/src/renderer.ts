@@ -10,6 +10,18 @@ interface Frame {
   ms: number;
 }
 
+export interface Loaded {
+  before: ImageBitmap;
+  width: number;
+  height: number;
+  previewW: number;
+  previewH: number;
+  /** Colour profile converted to sRGB while decoding (HEIC only). */
+  profile?: string;
+}
+
+type Pending<T> = { resolve: (v: T) => void; reject: (e: Error) => void };
+
 /**
  * Talks to the image worker. Preview renders are "latest wins": while one is
  * running, only the newest request is kept, so dragging a slider stays smooth.
@@ -19,8 +31,8 @@ export class Renderer {
   private nextId = 1;
   private busy = false;
   private queued: { settings: Settings; strength: number } | null = null;
-  private exports = new Map<number, { resolve: (b: Blob) => void; reject: (e: Error) => void }>();
-  private onLoaded: ((before: ImageBitmap) => void) | null = null;
+  private exports = new Map<number, Pending<Blob>>();
+  private loads = new Map<number, Pending<Loaded>>();
 
   constructor(private onFrame: (f: Frame) => void, private onError: (message: string) => void) {
     this.worker.onmessage = (e: MessageEvent<WorkerResponse>) => this.handle(e.data);
@@ -29,8 +41,10 @@ export class Renderer {
 
   private handle(msg: WorkerResponse): void {
     if (msg.type === 'loaded') {
-      this.onLoaded?.(msg.before);
-      this.onLoaded = null;
+      const { id, type, ...loaded } = msg;
+      void type;
+      this.loads.get(id)?.resolve(loaded);
+      this.loads.delete(id);
     } else if (msg.type === 'frame') {
       this.busy = false;
       this.onFrame(msg);
@@ -39,10 +53,11 @@ export class Renderer {
       this.exports.get(msg.id)?.resolve(msg.blob);
       this.exports.delete(msg.id);
     } else if (msg.type === 'error') {
-      const pending = msg.id !== undefined ? this.exports.get(msg.id) : undefined;
+      const pending = msg.id !== undefined ? (this.exports.get(msg.id) ?? this.loads.get(msg.id)) : undefined;
       if (pending) {
         pending.reject(new Error(msg.message));
         this.exports.delete(msg.id!);
+        this.loads.delete(msg.id!);
       } else {
         this.busy = false;
         this.onError(msg.message);
@@ -51,19 +66,16 @@ export class Renderer {
     }
   }
 
-  /** Hands the photo to the worker. Resolves with the unedited preview bitmap. */
-  async load(source: ImageBitmap): Promise<{ before: ImageBitmap; width: number; height: number; scale: number }> {
-    const scale = Math.min(1, PREVIEW_MAX / Math.max(source.width, source.height));
-    const previewW = Math.max(1, Math.round(source.width * scale));
-    const previewH = Math.max(1, Math.round(source.height * scale));
-    const before = await new Promise<ImageBitmap>((resolve) => {
-      this.onLoaded = resolve;
-      const msg: WorkerRequest = { type: 'load', bitmap: source, previewW, previewH };
-      this.worker.postMessage(msg, [source]);
-    });
+  /** Hands a decoded bitmap, or raw HEIC/HEIF bytes, to the worker. */
+  load(source: ImageBitmap | ArrayBuffer): Promise<Loaded> {
+    const id = this.nextId++;
     this.busy = false;
     this.queued = null;
-    return { before, width: previewW, height: previewH, scale };
+    return new Promise<Loaded>((resolve, reject) => {
+      this.loads.set(id, { resolve, reject });
+      const msg: WorkerRequest = { type: 'load', id, source, maxPreview: PREVIEW_MAX };
+      this.worker.postMessage(msg, [source]);
+    });
   }
 
   render(settings: Settings, strength: number): void {

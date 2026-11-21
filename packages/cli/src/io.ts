@@ -1,9 +1,9 @@
 import { execFileSync } from 'node:child_process';
-import { mkdtempSync, rmSync } from 'node:fs';
+import { mkdtempSync, readFileSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { extname, join } from 'node:path';
 import sharp from 'sharp';
-import type { RGBImage } from '@looks/core';
+import { decodeHeif, isHeif, type LibHeif, type RGBImage } from '@looks/core';
 
 export interface LoadedImage {
   img: RGBImage;
@@ -15,10 +15,10 @@ export interface LoadedImage {
 /** Formats sharp can write. Anything else (HEIC, RAW, ...) is saved as JPEG by default. */
 export const WRITABLE = new Set(['.jpg', '.jpeg', '.png', '.webp', '.tif', '.tiff', '.avif']);
 
-async function decode(input: string, maxSize?: number): Promise<LoadedImage> {
-  const meta = await sharp(input, { failOn: 'none' }).metadata();
+async function decode(open: () => ReturnType<typeof sharp>, maxSize?: number): Promise<LoadedImage> {
+  const meta = await open().metadata();
   const sixteenBit = meta.depth === 'ushort';
-  let pipe = sharp(input, { failOn: 'none' }).rotate();
+  let pipe = open().rotate();
   if (maxSize && Math.max(meta.width ?? 0, meta.height ?? 0) > maxSize) {
     pipe = pipe.resize({ width: maxSize, height: maxSize, fit: 'inside', withoutEnlargement: true });
   }
@@ -46,22 +46,51 @@ async function decode(input: string, maxSize?: number): Promise<LoadedImage> {
   return { img: { width, height, data: rgb }, alpha, sixteenBit };
 }
 
-/** Decodes any image sharp can read; on macOS, falls back to `sips` for HEIC and friends. */
+const fromFile = (path: string) => () => sharp(path, { failOn: 'none' });
+
+/** macOS: let the system decoder (full colour management) turn it into a TIFF sharp can read. */
+async function decodeWithSips(input: string, maxSize?: number): Promise<LoadedImage> {
+  const dir = mkdtempSync(join(tmpdir(), 'looks-'));
+  const tmp = join(dir, 'decoded.tiff');
+  try {
+    execFileSync('sips', ['-s', 'format', 'tiff', input, '--out', tmp], { stdio: 'ignore' });
+    return await decode(fromFile(tmp), maxSize);
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+}
+
+/** Any OS: decode HEIC/HEIF with libheif (WebAssembly) and convert its colour profile to sRGB. */
+async function decodeWithLibheif(bytes: Uint8Array, maxSize?: number): Promise<LoadedImage> {
+  const mod = (await import('libheif-js/wasm-bundle.js')) as unknown as { default?: LibHeif } & LibHeif;
+  const { img } = await decodeHeif(mod.default ?? mod, bytes);
+  if (!maxSize || Math.max(img.width, img.height) <= maxSize) return { img, alpha: null, sixteenBit: false };
+  const buf = new Uint16Array(img.data.length);
+  for (let i = 0; i < buf.length; i++) buf[i] = Math.round(Math.min(1, Math.max(0, img.data[i])) * 65535);
+  const loaded = await decode(() => sharp(buf, { raw: { width: img.width, height: img.height, channels: 3 } }), maxSize);
+  return { ...loaded, sixteenBit: false };
+}
+
+/**
+ * Decodes any image sharp can read. HEIC/HEIF (which sharp's prebuilt binaries
+ * can't decode) goes through macOS `sips`, or libheif everywhere else.
+ */
 export async function readImage(input: string, maxSize?: number): Promise<LoadedImage> {
   try {
-    return await decode(input, maxSize);
+    return await decode(fromFile(input), maxSize);
   } catch (err) {
-    if (process.platform !== 'darwin') throw err;
-    const dir = mkdtempSync(join(tmpdir(), 'looks-'));
-    const tmp = join(dir, 'decoded.tiff');
-    try {
-      execFileSync('sips', ['-s', 'format', 'tiff', input, '--out', tmp], { stdio: 'ignore' });
-      return await decode(tmp, maxSize);
-    } catch {
-      throw err;
-    } finally {
-      rmSync(dir, { recursive: true, force: true });
+    const bytes = new Uint8Array(readFileSync(input));
+    const heif = isHeif(bytes);
+    const forceLibheif = process.env.LOOKS_HEIF_DECODER === 'libheif';
+    if (process.platform === 'darwin' && !forceLibheif) {
+      try {
+        return await decodeWithSips(input, maxSize);
+      } catch {
+        if (!heif) throw err;
+      }
     }
+    if (heif) return decodeWithLibheif(bytes, maxSize);
+    throw err;
   }
 }
 
