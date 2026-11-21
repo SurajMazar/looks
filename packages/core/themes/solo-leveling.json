@@ -1,0 +1,48 @@
+{
+  "name": "solo-leveling",
+  "description": "Solo Leveling: cold blue night, deep shadows, glowing cyan lights.",
+  "notes": "Sliders copied one-for-one from a Lightroom tutorial reel. Made for night and rainy-street shots. It's a heavy, contrasty grade: on very dark photos add Exposure (+0.5 to +1) so the shadows don't go black.",
+  "settings": {
+    "exposure": -0.2,
+    "contrast": 37,
+    "highlights": -54,
+    "shadows": -42,
+    "whites": 8,
+    "blacks": -36,
+    "temp": -19,
+    "tint": 14,
+    "vibrance": 24,
+    "saturation": -6,
+    "texture": 8,
+    "clarity": 12,
+    "dehaze": 10,
+    "mixer": {
+      "red": { "hue": 5, "sat": -10, "lum": -5 },
+      "orange": { "hue": -4, "sat": -15, "lum": 4 },
+      "yellow": { "hue": -28, "sat": -48, "lum": -18 },
+      "green": { "hue": -38, "sat": -58, "lum": -24 },
+      "aqua": { "hue": -18, "sat": 28, "lum": -6 },
+      "blue": { "hue": -20, "sat": 42, "lum": -28 },
+      "purple": { "hue": 18, "sat": 38, "lum": -12 },
+      "magenta": { "hue": 8, "sat": 20, "lum": -8 }
+    },
+    "grading": {
+      "shadows": { "hue": 225, "sat": 32 },
+      "midtones": { "hue": 250, "sat": 18 },
+      "highlights": { "hue": 205, "sat": 12, "lum": 4 },
+      "blending": 55,
+      "balance": -20
+    },
+    "sharpening": {
+      "amount": 42,
+      "radius": 1,
+      "detail": 25,
+      "masking": 45
+    },
+    "vignette": {
+      "amount": -14,
+      "midpoint": 40,
+      "feather": 75
+    }
+  }
+}

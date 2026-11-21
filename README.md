@@ -14,6 +14,8 @@ Built-in themes, each transcribed slider-for-slider from a Lightroom tutorial:
 
 - **`gta6`**: GTA VI / Vice City sunset. Teal shadows, candy-pink skies, warm highlights.
 - **`cyberpunk`**: Cyberpunk: Edgerunners / Night City sunset. Electric blue skies, hot-pink horizons, purple shadows. Works best on dusk shots; on daylight photos add `--exposure -1.5` or so for a night feel.
+- **`solo-leveling`**: Solo Leveling. Cold blue night, deep shadows, glowing cyan lights. Made for night and rainy streets.
+- **`dandandan`**: Dandadan. Violet dusk skies, deep indigo shadows, a touch of grain.
 
 - **CLI**: batch-apply themes to JPEG, PNG, WebP, AVIF, TIFF and HEIC/HEIF photos (iPhone photos included).
 - **Web app**: open a photo (HEIC too, in any browser), pick or tweak a look, download the result. Nothing is uploaded; it all runs in your browser.

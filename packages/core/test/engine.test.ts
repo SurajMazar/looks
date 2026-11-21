@@ -176,10 +176,15 @@ describe('themes', () => {
   });
 
   it('every built-in theme file is valid, with no warnings', async () => {
-    const files = ['gta6', 'cyberpunk'];
+    const { readdirSync, readFileSync } = await import('node:fs');
+    const dir = new URL('../themes/', import.meta.url);
+    const files = readdirSync(dir).filter((f) => f.endsWith('.json'));
+    expect(files.length).toBe(BUILTIN_THEMES.length);
     for (const f of files) {
-      const raw = (await import(`../themes/${f}.json`)).default;
+      const raw = JSON.parse(readFileSync(new URL(f, dir), 'utf8'));
       expect(parseTheme(raw).warnings, f).toEqual([]);
+      expect(raw.name, f).toBe(f.replace(/\.json$/, ''));
+      expect(findBuiltin(raw.name), `${f} is registered in builtins.ts`).toBeDefined();
     }
     const cp = findBuiltin('cyberpunk')!;
     expect(cp.settings.curve?.rgb).toEqual([[0, 0], [32, 22], [64, 55], [128, 133], [192, 207], [255, 255]]);

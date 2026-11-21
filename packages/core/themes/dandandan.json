@@ -1,0 +1,38 @@
+{
+  "name": "dandandan",
+  "description": "Dandadan: violet dusk skies, deep indigo shadows, a touch of film grain.",
+  "notes": "Sliders copied one-for-one from a Lightroom tutorial reel. Best on dusk and blue-hour shots.",
+  "settings": {
+    "contrast": 24,
+    "highlights": -36,
+    "shadows": 18,
+    "whites": 12,
+    "blacks": -24,
+    "vibrance": 24,
+    "saturation": -4,
+    "texture": 5,
+    "clarity": 9,
+    "dehaze": 5,
+    "mixer": {
+      "red": { "hue": -8, "sat": 32, "lum": -8 },
+      "orange": { "hue": -12, "sat": -12, "lum": 4 },
+      "yellow": { "hue": -28, "sat": -38, "lum": -8 },
+      "green": { "hue": 30, "sat": -38, "lum": -18 },
+      "aqua": { "hue": 22, "sat": 18, "lum": -5 },
+      "blue": { "hue": 8, "sat": 26, "lum": -14 },
+      "purple": { "hue": -12, "sat": 12, "lum": -5 },
+      "magenta": { "hue": 15, "sat": 22, "lum": -5 }
+    },
+    "grading": {
+      "shadows": { "hue": 231, "sat": 30, "lum": -4 },
+      "midtones": { "hue": 345, "sat": 12, "lum": 2 },
+      "highlights": { "hue": 190, "sat": 12, "lum": 3 }
+    },
+    "vignette": {
+      "amount": -10
+    },
+    "grain": {
+      "amount": 8
+    }
+  }
+}
