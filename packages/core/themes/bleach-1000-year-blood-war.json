@@ -1,0 +1,39 @@
+{
+  "name": "bleach-1000-year-blood-war",
+  "description": "Bleach: Thousand-Year Blood War: blood-red skies, crimson shadows, dark contrast.",
+  "notes": "Sliders copied one-for-one from a Lightroom tutorial reel. Strongest on sunsets and dramatic skies. In Lightroom, blue skies turn fully crimson; here they land closer to magenta-purple.",
+  "settings": {
+    "exposure": -0.2,
+    "contrast": 24,
+    "highlights": -30,
+    "shadows": -12,
+    "whites": 12,
+    "blacks": -24,
+    "temp": -4,
+    "tint": 28,
+    "vibrance": 16,
+    "saturation": -5,
+    "texture": 4,
+    "clarity": 5,
+    "dehaze": 4,
+    "curve": {
+      "rgb": [[0, 4], [32, 19], [64, 47], [128, 115], [192, 197], [255, 250]]
+    },
+    "mixer": {
+      "red": { "hue": -25, "sat": 24, "lum": -8 },
+      "orange": { "hue": -45, "sat": -35, "lum": 3 },
+      "yellow": { "hue": -35, "sat": -70, "lum": -15 },
+      "green": { "hue": -10, "sat": -65, "lum": -24 },
+      "aqua": { "hue": 15, "sat": -45, "lum": -15 },
+      "blue": { "hue": 20, "sat": -30, "lum": -18 },
+      "purple": { "hue": 30, "sat": 22, "lum": -10 },
+      "magenta": { "hue": 12, "sat": 32, "lum": 8 }
+    },
+    "grading": {
+      "shadows": { "hue": 342, "sat": 35, "lum": -10 },
+      "midtones": { "hue": 335, "sat": 30, "lum": -4 },
+      "highlights": { "hue": 328, "sat": 22, "lum": 7 }
+    },
+    "grain": { "amount": 8 }
+  }
+}
