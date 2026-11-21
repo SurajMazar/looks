@@ -1,0 +1,38 @@
+{
+  "name": "tokyo-ghoul",
+  "description": "Tokyo Ghoul: dark teal-green night, crushed shadows, glowing red lights, gritty grain.",
+  "notes": "Sliders copied one-for-one from a Lightroom tutorial reel. Made for moody night shots with red and neon lights.",
+  "settings": {
+    "exposure": -0.18,
+    "contrast": 24,
+    "highlights": -38,
+    "shadows": -30,
+    "whites": 12,
+    "blacks": -34,
+    "vibrance": -8,
+    "saturation": -6,
+    "texture": 8,
+    "clarity": 18,
+    "dehaze": 13,
+    "curve": {
+      "rgb": [[0, 0], [64, 58], [128, 126], [192, 203], [255, 250]]
+    },
+    "mixer": {
+      "red": { "hue": -8, "sat": 50, "lum": -12 },
+      "orange": { "hue": -6, "sat": -12, "lum": 7 },
+      "yellow": { "hue": -35, "sat": -55, "lum": -18 },
+      "green": { "hue": 30, "sat": -42, "lum": -28 },
+      "aqua": { "hue": -22, "sat": -22, "lum": -20 },
+      "blue": { "hue": -18, "sat": -48, "lum": -34 },
+      "purple": { "hue": 28, "sat": -25, "lum": -15 },
+      "magenta": { "hue": 20, "sat": 8, "lum": -8 }
+    },
+    "grading": {
+      "shadows": { "hue": 176, "sat": 22, "lum": -8 },
+      "midtones": { "hue": 190, "sat": 8, "lum": -3 },
+      "highlights": { "hue": 346, "sat": 10, "lum": 2 }
+    },
+    "vignette": { "amount": -18, "midpoint": 34, "roundness": -8, "feather": 72 },
+    "grain": { "amount": 18, "size": 24, "roughness": 48 }
+  }
+}

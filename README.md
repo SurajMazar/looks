@@ -17,6 +17,7 @@ Built-in themes, each transcribed slider-for-slider from a Lightroom tutorial:
 - **`solo-leveling`**: Solo Leveling. Cold blue night, deep shadows, glowing cyan lights. Made for night and rainy streets.
 - **`dandandan`**: Dandadan. Violet dusk skies, deep indigo shadows, a touch of grain.
 - **`mushoku-tensei`**: Mushoku Tensei. Vivid storybook greens, bright cyan skies, soft warm highlights.
+- **`tokyo-ghoul`**: Tokyo Ghoul. Dark teal-green nights, crushed shadows, glowing red lights, gritty grain.
 
 - **CLI**: batch-apply themes to JPEG, PNG, WebP, AVIF, TIFF and HEIC/HEIF photos (iPhone photos included).
 - **Web app**: open a photo (HEIC too, in any browser), pick or tweak a look, download the result. Nothing is uploaded; it all runs in your browser.
