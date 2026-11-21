@@ -6,7 +6,7 @@ Save Lightroom-style photo looks as **named themes** and apply them in one comma
 looks gta6 photo.jpg
 ```
 
-…or in the browser, with live sliders and a before/after split: **[surajmazar.github.io/looks](https://surajmazar.github.io/looks/)**
+…or in the browser, with live sliders and a before/after split: **[looks-omega.vercel.app](https://looks-omega.vercel.app)** (also on [GitHub Pages](https://surajmazar.github.io/looks/)).
 
 Themes use the same sliders and units as Lightroom (Light, Color, Color Mixer, Color Grading, Detail, Effects, Tone Curve), so you can copy settings straight from Lightroom or a tutorial. You can also import Lightroom `.xmp` presets and export any theme back to `.xmp`.
 
