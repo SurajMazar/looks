@@ -54,5 +54,13 @@
     "before": "samples/bleach-1000-year-blood-war-before.webp",
     "after": "samples/bleach-1000-year-blood-war-after.webp",
     "credit": "https://unsplash.com/photos/a-street-light-sitting-next-to-a-body-of-water-X34q3blcAl8"
+  },
+  {
+    "theme": "call-of-the-night",
+    "alt": "City at blue hour with a lit railway",
+    "photo": "samples/call-of-the-night.jpg",
+    "before": "samples/call-of-the-night-before.webp",
+    "after": "samples/call-of-the-night-after.webp",
+    "credit": "https://unsplash.com/photos/lighted-rail-near-buildings-Oc1L2kMrAQc"
   }
 ]

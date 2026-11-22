@@ -1,0 +1,31 @@
+{
+  "name": "call-of-the-night",
+  "description": "Call of the Night: deep violet night skies, electric blues, soft magenta glow.",
+  "notes": "Sliders copied one-for-one from a Lightroom tutorial reel. There, exposure and white balance are set per photo. Best on blue-hour and dusk city shots.",
+  "settings": {
+    "contrast": 29,
+    "highlights": -38,
+    "shadows": 12,
+    "whites": 9,
+    "blacks": -28,
+    "vibrance": 32,
+    "saturation": -2,
+    "mixer": {
+      "red": { "hue": -5, "sat": 8, "lum": -5 },
+      "orange": { "hue": -4, "sat": -12, "lum": 5 },
+      "yellow": { "hue": -20, "sat": -35, "lum": -5 },
+      "green": { "sat": -45, "lum": -10 },
+      "aqua": { "hue": 16, "sat": 12, "lum": -8 },
+      "blue": { "hue": 12, "sat": 38, "lum": -20 },
+      "purple": { "hue": -6, "sat": 38, "lum": -12 },
+      "magenta": { "hue": 4, "sat": 38, "lum": 2 }
+    },
+    "grading": {
+      "shadows": { "hue": 253, "sat": 28, "lum": -8 },
+      "midtones": { "hue": 268, "sat": 18, "lum": -3 },
+      "highlights": { "hue": 315, "sat": 17, "lum": 4 }
+    },
+    "sharpening": { "amount": 33, "radius": 1, "detail": 23, "masking": 53 },
+    "noiseReduction": { "luminance": 8, "color": 25 }
+  }
+}

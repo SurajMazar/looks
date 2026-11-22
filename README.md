@@ -19,7 +19,9 @@ Built-in themes, each transcribed slider-for-slider from a Lightroom tutorial:
 - **`mushoku-tensei`**: Mushoku Tensei. Vivid storybook greens, bright cyan skies, soft warm highlights.
 - **`tokyo-ghoul`**: Tokyo Ghoul. Dark teal-green nights, crushed shadows, glowing red lights, gritty grain.
 - **`bleach-1000-year-blood-war`**: Bleach: Thousand-Year Blood War. Blood-red skies, crimson shadows, dark contrast.
+- **`call-of-the-night`**: Call of the Night. Deep violet night skies, electric blues, soft magenta glow.
 
+<!-- samples:start -->
 | Look | Before | After |
 | --- | --- | --- |
 | `gta6` | <img src="apps/web/public/samples/gta6-before.webp" width="170" alt="Ocean Drive, Miami, at dusk, before"> | <img src="apps/web/public/samples/gta6-after.webp" width="170" alt="Ocean Drive, Miami, at dusk, with gta6"> |
@@ -29,6 +31,8 @@ Built-in themes, each transcribed slider-for-slider from a Lightroom tutorial:
 | `mushoku-tensei` | <img src="apps/web/public/samples/mushoku-tensei-before.webp" width="170" alt="Grassy path through a green field, before"> | <img src="apps/web/public/samples/mushoku-tensei-after.webp" width="170" alt="Grassy path through a green field, with mushoku-tensei"> |
 | `tokyo-ghoul` | <img src="apps/web/public/samples/tokyo-ghoul-before.webp" width="170" alt="Train platform at night, before"> | <img src="apps/web/public/samples/tokyo-ghoul-after.webp" width="170" alt="Train platform at night, with tokyo-ghoul"> |
 | `bleach-1000-year-blood-war` | <img src="apps/web/public/samples/bleach-1000-year-blood-war-before.webp" width="170" alt="River and street light at sunset, before"> | <img src="apps/web/public/samples/bleach-1000-year-blood-war-after.webp" width="170" alt="River and street light at sunset, with bleach-1000-year-blood-war"> |
+| `call-of-the-night` | <img src="apps/web/public/samples/call-of-the-night-before.webp" width="170" alt="City at blue hour with a lit railway, before"> | <img src="apps/web/public/samples/call-of-the-night-after.webp" width="170" alt="City at blue hour with a lit railway, with call-of-the-night"> |
+<!-- samples:end -->
 
 Sample photos: [Unsplash](apps/web/public/samples/CREDITS.md), free under the Unsplash License. Regenerate the after images with `pnpm samples` after changing a theme.
 

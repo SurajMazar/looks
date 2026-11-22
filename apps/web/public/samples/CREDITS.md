@@ -9,3 +9,4 @@ Free photos from Unsplash, used under the [Unsplash License](https://unsplash.co
 - `mushoku-tensei`: [Grassy path through a green field](https://unsplash.com/photos/grassy-path-winding-uphill-through-a-vibrant-green-field-74BSKWPzTu4)
 - `tokyo-ghoul`: [Train platform at night](https://unsplash.com/photos/two-people-stand-on-a-train-platform-at-night-aY_i87chJJg)
 - `bleach-1000-year-blood-war`: [River and street light at sunset](https://unsplash.com/photos/a-street-light-sitting-next-to-a-body-of-water-X34q3blcAl8)
+- `call-of-the-night`: [City at blue hour with a lit railway](https://unsplash.com/photos/lighted-rail-near-buildings-Oc1L2kMrAQc)

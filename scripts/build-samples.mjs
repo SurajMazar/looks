@@ -5,9 +5,10 @@
 //   apps/web/public/samples/samples.json         manifest the app reads
 //
 //   node scripts/build-samples.mjs                regenerate thumbnails from the committed photos
-//   node scripts/build-samples.mjs --import DIR   first shrink DIR/<theme>.jpg originals into place
+//   node scripts/build-samples.mjs --import DIR   first shrink any DIR/<theme>.jpg originals into place
+// It also rewrites the before/after table in README.md between the samples markers.
 import { execFileSync } from 'node:child_process';
-import { existsSync, mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { createRequire } from 'node:module';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
@@ -28,6 +29,7 @@ const SAMPLES = [
   { theme: 'mushoku-tensei', alt: 'Grassy path through a green field', credit: 'https://unsplash.com/photos/grassy-path-winding-uphill-through-a-vibrant-green-field-74BSKWPzTu4' },
   { theme: 'tokyo-ghoul', alt: 'Train platform at night', credit: 'https://unsplash.com/photos/two-people-stand-on-a-train-platform-at-night-aY_i87chJJg' },
   { theme: 'bleach-1000-year-blood-war', alt: 'River and street light at sunset', credit: 'https://unsplash.com/photos/a-street-light-sitting-next-to-a-body-of-water-X34q3blcAl8' },
+  { theme: 'call-of-the-night', alt: 'City at blue hour with a lit railway', credit: 'https://unsplash.com/photos/lighted-rail-near-buildings-Oc1L2kMrAQc' },
 ];
 
 const importDir = process.argv.includes('--import') ? process.argv[process.argv.indexOf('--import') + 1] : null;
@@ -40,7 +42,7 @@ const thumb = (input, file) =>
 try {
   for (const s of SAMPLES) {
     const photo = join(out, `${s.theme}.jpg`);
-    if (importDir) {
+    if (importDir && existsSync(join(importDir, `${s.theme}.jpg`))) {
       await sharp(join(importDir, `${s.theme}.jpg`))
         .rotate()
         .resize(1200, 1200, { fit: 'inside', withoutEnlargement: true })
@@ -73,4 +75,13 @@ writeFileSync(
     SAMPLES.map((s) => `- \`${s.theme}\`: [${s.alt}](${s.credit})`).join('\n') +
     '\n',
 );
-console.log(`wrote ${join(out, 'samples.json')}`);
+const readmePath = join(root, 'README.md');
+const readme = readFileSync(readmePath, 'utf8');
+const table =
+  '| Look | Before | After |\n| --- | --- | --- |\n' +
+  manifest
+    .map((m) => `| \`${m.theme}\` | <img src="apps/web/public/${m.before}" width="170" alt="${m.alt}, before"> | <img src="apps/web/public/${m.after}" width="170" alt="${m.alt}, with ${m.theme}"> |`)
+    .join('\n');
+const marked = readme.replace(/<!-- samples:start -->[\s\S]*?<!-- samples:end -->/, `<!-- samples:start -->\n${table}\n<!-- samples:end -->`);
+if (marked !== readme) writeFileSync(readmePath, marked);
+console.log(`wrote ${join(out, 'samples.json')}${marked !== readme ? ' and the README table' : ''}`);
