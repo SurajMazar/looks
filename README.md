@@ -10,7 +10,7 @@ looks gta6 photo.jpg
 
 Themes use the same sliders and units as Lightroom (Light, Color, Color Mixer, Color Grading, Detail, Effects, Tone Curve), so you can copy settings straight from Lightroom or a tutorial. You can also import Lightroom `.xmp` presets and export any theme back to `.xmp`.
 
-Built-in themes, each transcribed slider-for-slider from a Lightroom tutorial:
+Built-in themes, each built from a Lightroom tutorial (`looks show <theme>` shows its source and how closely it follows it):
 
 - **`gta6`**: GTA VI / Vice City sunset. Teal shadows, candy-pink skies, warm highlights.
 - **`cyberpunk`**: Cyberpunk: Edgerunners / Night City sunset. Electric blue skies, hot-pink horizons, purple shadows. Works best on dusk shots; on daylight photos add `--exposure -1.5` or so for a night feel.
@@ -20,6 +20,9 @@ Built-in themes, each transcribed slider-for-slider from a Lightroom tutorial:
 - **`tokyo-ghoul`**: Tokyo Ghoul. Dark teal-green nights, crushed shadows, glowing red lights, gritty grain.
 - **`bleach-1000-year-blood-war`**: Bleach: Thousand-Year Blood War. Blood-red skies, crimson shadows, dark contrast.
 - **`call-of-the-night`**: Call of the Night. Deep violet night skies, electric blues, soft magenta glow.
+- **`your-name`**: Your Name / Makoto Shinkai. Deep saturated blue skies, bright lifted shadows, clean airy light.
+- **`ghibli`**: Studio Ghibli. Soft painterly light, rich warm greens, turquoise skies.
+- **`wes-anderson`**: Wes Anderson. Faded matte film, soft flat contrast, dusty muted pastels.
 
 <!-- samples:start -->
 | Look | Before | After |
@@ -32,6 +35,9 @@ Built-in themes, each transcribed slider-for-slider from a Lightroom tutorial:
 | `tokyo-ghoul` | <img src="apps/web/public/samples/tokyo-ghoul-before.webp" width="170" alt="Train platform at night, before"> | <img src="apps/web/public/samples/tokyo-ghoul-after.webp" width="170" alt="Train platform at night, with tokyo-ghoul"> |
 | `bleach-1000-year-blood-war` | <img src="apps/web/public/samples/bleach-1000-year-blood-war-before.webp" width="170" alt="River and street light at sunset, before"> | <img src="apps/web/public/samples/bleach-1000-year-blood-war-after.webp" width="170" alt="River and street light at sunset, with bleach-1000-year-blood-war"> |
 | `call-of-the-night` | <img src="apps/web/public/samples/call-of-the-night-before.webp" width="170" alt="City at blue hour with a lit railway, before"> | <img src="apps/web/public/samples/call-of-the-night-after.webp" width="170" alt="City at blue hour with a lit railway, with call-of-the-night"> |
+| `your-name` | <img src="apps/web/public/samples/your-name-before.webp" width="170" alt="Tokyo skyline under a blue summer sky, before"> | <img src="apps/web/public/samples/your-name-after.webp" width="170" alt="Tokyo skyline under a blue summer sky, with your-name"> |
+| `ghibli` | <img src="apps/web/public/samples/ghibli-before.webp" width="170" alt="Village among green hills, before"> | <img src="apps/web/public/samples/ghibli-after.webp" width="170" alt="Village among green hills, with ghibli"> |
+| `wes-anderson` | <img src="apps/web/public/samples/wes-anderson-before.webp" width="170" alt="Symmetrical pink facade in Jaipur, before"> | <img src="apps/web/public/samples/wes-anderson-after.webp" width="170" alt="Symmetrical pink facade in Jaipur, with wes-anderson"> |
 <!-- samples:end -->
 
 Sample photos: [Unsplash](apps/web/public/samples/CREDITS.md), free under the Unsplash License. Regenerate the after images with `pnpm samples` after changing a theme.

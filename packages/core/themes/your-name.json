@@ -1,0 +1,39 @@
+{
+  "name": "your-name",
+  "description": "Your Name / Makoto Shinkai: deep saturated blue skies, bright lifted shadows, clean airy light.",
+  "notes": "From Aizer's guide to anime-style Lightroom presets (Shinkai style). The guide gives most sliders as ranges; this uses the middle of each range. Its Light Blue band says only 'like Blue, a little less saturated', so Aqua follows Blue at lower saturation. Best on daytime skies, clouds and city or countryside views that aren't underexposed.",
+  "author": "Aizer",
+  "source": "https://note.com/aizer/n/n67e993ffeecb",
+  "settings": {
+    "exposure": 0.5,
+    "contrast": -15,
+    "highlights": -40,
+    "shadows": 50,
+    "whites": 15,
+    "blacks": -10,
+    "dehaze": 10,
+    "curve": {
+      "rgb": [[0, 0], [20, 30], [40, 45], [160, 165], [240, 235], [255, 255]]
+    },
+    "mixer": {
+      "red": { "hue": 8, "sat": 15 },
+      "orange": { "hue": -10, "sat": -15, "lum": 22 },
+      "yellow": { "hue": -15, "sat": 15, "lum": -3 },
+      "green": { "hue": 10, "sat": 22, "lum": -10 },
+      "aqua": { "hue": -8, "sat": 20, "lum": -12 },
+      "blue": { "hue": -8, "sat": 30, "lum": -18 },
+      "purple": { "sat": 15 },
+      "magenta": { "sat": 15 }
+    },
+    "grading": {
+      "shadows": { "hue": 250, "sat": 8 },
+      "midtones": { "hue": 200, "sat": 4 },
+      "highlights": { "hue": 45, "sat": 6 },
+      "blending": 70,
+      "balance": 15
+    },
+    "sharpening": { "amount": 50, "radius": 1, "detail": 30, "masking": 78 },
+    "noiseReduction": { "luminance": 15, "color": 32 },
+    "vignette": { "amount": -8 }
+  }
+}

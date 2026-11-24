@@ -30,6 +30,9 @@ const SAMPLES = [
   { theme: 'tokyo-ghoul', alt: 'Train platform at night', credit: 'https://unsplash.com/photos/two-people-stand-on-a-train-platform-at-night-aY_i87chJJg' },
   { theme: 'bleach-1000-year-blood-war', alt: 'River and street light at sunset', credit: 'https://unsplash.com/photos/a-street-light-sitting-next-to-a-body-of-water-X34q3blcAl8' },
   { theme: 'call-of-the-night', alt: 'City at blue hour with a lit railway', credit: 'https://unsplash.com/photos/lighted-rail-near-buildings-Oc1L2kMrAQc' },
+  { theme: 'your-name', alt: 'Tokyo skyline under a blue summer sky', credit: 'https://unsplash.com/photos/skyscrapers-and-urban-buildings-in-tokyo-rD28m9BmXVs' },
+  { theme: 'ghibli', alt: 'Village among green hills', credit: 'https://unsplash.com/photos/a-small-village-surrounded-by-lush-green-hills-EZB5et-Fpt0' },
+  { theme: 'wes-anderson', alt: 'Symmetrical pink facade in Jaipur', credit: 'https://unsplash.com/photos/pink-painted-temple-_V_Wy4wwQl4' },
 ];
 
 const importDir = process.argv.includes('--import') ? process.argv[process.argv.indexOf('--import') + 1] : null;

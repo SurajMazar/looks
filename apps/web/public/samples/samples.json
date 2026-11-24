@@ -62,5 +62,29 @@
     "before": "samples/call-of-the-night-before.webp",
     "after": "samples/call-of-the-night-after.webp",
     "credit": "https://unsplash.com/photos/lighted-rail-near-buildings-Oc1L2kMrAQc"
+  },
+  {
+    "theme": "your-name",
+    "alt": "Tokyo skyline under a blue summer sky",
+    "photo": "samples/your-name.jpg",
+    "before": "samples/your-name-before.webp",
+    "after": "samples/your-name-after.webp",
+    "credit": "https://unsplash.com/photos/skyscrapers-and-urban-buildings-in-tokyo-rD28m9BmXVs"
+  },
+  {
+    "theme": "ghibli",
+    "alt": "Village among green hills",
+    "photo": "samples/ghibli.jpg",
+    "before": "samples/ghibli-before.webp",
+    "after": "samples/ghibli-after.webp",
+    "credit": "https://unsplash.com/photos/a-small-village-surrounded-by-lush-green-hills-EZB5et-Fpt0"
+  },
+  {
+    "theme": "wes-anderson",
+    "alt": "Symmetrical pink facade in Jaipur",
+    "photo": "samples/wes-anderson.jpg",
+    "before": "samples/wes-anderson-before.webp",
+    "after": "samples/wes-anderson-after.webp",
+    "credit": "https://unsplash.com/photos/pink-painted-temple-_V_Wy4wwQl4"
   }
 ]

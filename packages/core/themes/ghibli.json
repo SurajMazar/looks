@@ -1,0 +1,36 @@
+{
+  "name": "ghibli",
+  "description": "Studio Ghibli: soft painterly light, rich warm greens, turquoise skies, gently lifted shadows.",
+  "notes": "Follows Alexandra Koeniguer's (Zone Blanche) Lightroom tutorial for a Ghibli-style travel photo step by step. The tutorial gives each slider's direction and strength in words ('lower slightly', 'push firmly', 'a lot of luminance noise reduction') but no numbers, so the amounts here are chosen to match those words. Best on sunny landscapes, villages, gardens and summer skies.",
+  "author": "Alexandra Koeniguer",
+  "source": "https://www.zone-blanche.com/tutoriel-preset-lightroom-photo-de-voyage-ghibli/",
+  "settings": {
+    "exposure": 0.2,
+    "contrast": -15,
+    "highlights": -30,
+    "shadows": 25,
+    "whites": -15,
+    "blacks": 15,
+    "temp": 8,
+    "tint": -6,
+    "vibrance": 40,
+    "saturation": -8,
+    "texture": 10,
+    "clarity": -12,
+    "dehaze": 8,
+    "parametric": { "highlights": -10, "lights": 8, "shadows": 8 },
+    "mixer": {
+      "red": { "sat": 10 },
+      "orange": { "sat": 10, "lum": 10 },
+      "yellow": { "hue": -10 },
+      "green": { "hue": 15, "sat": 15, "lum": -10 },
+      "blue": { "hue": -15, "sat": 15 }
+    },
+    "grading": {
+      "shadows": { "hue": 215, "sat": 10 },
+      "highlights": { "hue": 40, "sat": 12 }
+    },
+    "sharpening": { "amount": 60, "radius": 1.5, "detail": 15 },
+    "noiseReduction": { "luminance": 30, "color": 10 }
+  }
+}

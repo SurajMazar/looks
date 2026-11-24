@@ -1,0 +1,29 @@
+{
+  "name": "wes-anderson",
+  "description": "Wes Anderson: faded matte film, soft flat contrast, dusty muted pastels, teal-leaning greens and blues.",
+  "notes": "From Imagen's Wes Anderson Lightroom style guide. Where it gives a range this uses the middle; its colour grading hues are named, not numbered ('bluish-teal' shadows, 'pale yellow or light orange' highlights), so those are 190 and 45. It also nudges Calibration (Blue Primary hue -15, Red and Blue Primary saturation +5 to +10), which looks has no slider for. Best on symmetrical, evenly lit scenes: buildings, interiors, storefronts.",
+  "author": "Imagen",
+  "source": "https://imagen-ai.com/valuable-tips/wes-anderson-lightroom-presets/",
+  "settings": {
+    "temp": 10,
+    "tint": 8,
+    "contrast": -25,
+    "highlights": -50,
+    "shadows": 40,
+    "whites": -30,
+    "blacks": 30,
+    "mixer": {
+      "red": { "hue": 10, "sat": -15, "lum": 10 },
+      "orange": { "sat": -5, "lum": 5 },
+      "yellow": { "hue": 18, "sat": -20, "lum": 10 },
+      "green": { "hue": 30, "sat": -50 },
+      "aqua": { "sat": -40 },
+      "blue": { "hue": 15, "sat": -40 }
+    },
+    "grading": {
+      "shadows": { "hue": 190, "sat": 12 },
+      "highlights": { "hue": 45, "sat": 8 }
+    },
+    "vignette": { "amount": -10 }
+  }
+}
